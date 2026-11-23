@@ -27,7 +27,7 @@ def test_ocr_autofills_serial():
 
 def test_full_bench_flow_and_save():
     at = run_app()
-    at.radio[1].set_value("Type / example").run()
+    assert not any(r.label == "Note input" for r in at.radio), "voice input is archived for the web demo"
     note_pick = next(s for s in at.selectbox if s.label == "Example note")
     note_pick.set_value(CORROSION).run()
     assert not at.exception

@@ -3,12 +3,17 @@ PCB Repair Assistant - Streamlit app
 
 AI (deep learning)                       ML (classical, trained by us on repair records)
   1. OCR           - Tesseract              4. Fault classifier - TF-IDF + Logistic Regression
-  2. Speech        - Whisper                5. Repair predictor - Random Forest
+  2. Speech        - Whisper (archived)     5. Repair predictor - Random Forest
   3. Part detector - YOLOv8n (fine-tuned by us on open PCB photos)
 
 Run locally:  streamlit run app.py
+
+Voice input is archived for the web demo (no microphone in the classroom setup).
+The code is kept: set PCB_VOICE=1 and `pip install -r requirements-voice.txt` to
+turn it back on. The Android app keeps its own offline speech-to-text (Vosk).
 """
 import json
+import os
 from datetime import datetime
 from pathlib import Path
 
@@ -21,7 +26,8 @@ from PIL import Image
 
 from detector_utils import PartDetector
 from ocr_utils import find_label, parse_label, preprocess, read_text
-from speech_utils import transcribe
+
+VOICE_ENABLED = os.environ.get("PCB_VOICE", "0") == "1"
 
 ROOT = Path(__file__).parent
 MODELS = ROOT / "models"
@@ -86,6 +92,27 @@ def load_detector():
     return _load_detector(MODEL.stat().st_mtime_ns if PartDetector.available() else 0)
 
 
+def tile_zoom(detector):
+    """Zoom for tiled detection: the scale the model was trained at if it was
+    trained on tiles (parts.json "tiling"), else 1.5 (best on the test boards
+    for the whole-board model, see models/tiling_eval.json)."""
+    t = detector.meta.get("tiling")
+    return t["long_side"] / detector.size if t else 1.5
+
+
+@st.cache_data(max_entries=32, show_spinner=False)
+def _detect_cached(key, tiled, _detector, _img):
+    if tiled:
+        return _detector.detect_tiled(_img, zoom=tile_zoom(_detector))
+    return _detector.detect(_img)
+
+
+def run_detection(detector, img, tiled):
+    import hashlib
+    key = hashlib.md5(img.convert("RGB").tobytes()).hexdigest() + str(id(detector.session))
+    return _detect_cached(key, tiled, detector, img)
+
+
 @st.cache_data
 def load_registry():
     return pd.read_csv(ROOT / "data" / "board_registry.csv", dtype={"serial": str})
@@ -127,8 +154,9 @@ with st.sidebar:
     st.markdown("**What the app demonstrates**")
     st.markdown(badge("AI", "OCR (Tesseract)") + "<br><small>Reads board label from a photo</small>",
                 unsafe_allow_html=True)
-    st.markdown(badge("AI", "Speech-to-text (Whisper)") + "<br><small>Turns the voice note into text</small>",
-                unsafe_allow_html=True)
+    if VOICE_ENABLED:
+        st.markdown(badge("AI", "Speech-to-text (Whisper)") + "<br><small>Turns the voice note into text</small>",
+                    unsafe_allow_html=True)
     st.markdown(badge("AI", "Part detector (YOLOv8n)") + "<br><small>Finds and classifies components</small>",
                 unsafe_allow_html=True)
     st.markdown(badge("ML", "Fault classifier") + "<br><small>TF-IDF + Logistic Regression</small>",
@@ -194,11 +222,15 @@ with bench:
         if detector is None:
             st.caption("Part detector model not installed (models/parts.onnx).")
         else:
+            tiled = st.toggle("Detailed detection (tiles)", value=True, key="tiled",
+                              help="Cuts the photo into overlapping tiles so small resistors and capacitors "
+                                   "keep enough pixels to be found. Turn off to compare with a single pass.")
             with st.spinner("Detecting components..."):
-                parts = detector.detect(img)
+                parts = run_detection(detector, img, tiled)
             drawn, colours = detector.draw(img, parts)
             d1, d2 = st.columns([1.6, 1])
-            d1.image(drawn, caption=f"{len(parts)} components detected", width="stretch")
+            d1.image(drawn, caption=f"{len(parts)} components detected "
+                                    f"({'tiled' if tiled else 'single pass'})", width="stretch")
             with d2:
                 counts = pd.Series([p["name"] for p in parts], dtype=str).value_counts()
                 for name, n in counts.items():
@@ -221,13 +253,19 @@ with bench:
         m3.metric("Previous repairs", int(board["previous_repairs"]))
         st.caption(f"Last recorded fault: {FAULT_NAMES[board['last_fault']]}")
 
-    # ---------- Step 3: Speech-to-text
-    st.markdown("### 3 · Voice note")
-    st.markdown(badge("AI", "Speech-to-text transcribes the technician"), unsafe_allow_html=True)
-    mode = st.radio("Note input", ["Record voice", "Upload audio", "Type / example"],
-                    horizontal=True, label_visibility="collapsed")
+    # ---------- Step 3: technician note (voice input archived for the web demo)
+    if VOICE_ENABLED:
+        st.markdown("### 3 · Voice note")
+        st.markdown(badge("AI", "Speech-to-text transcribes the technician"), unsafe_allow_html=True)
+        mode = st.radio("Note input", ["Record voice", "Upload audio", "Type / example"],
+                        horizontal=True, label_visibility="collapsed")
+    else:
+        st.markdown("### 3 · Technician note")
+        st.caption("Type the fault description, or pick an example note.")
+        mode = "Type / example"
     note = ""
     if mode in ("Record voice", "Upload audio"):
+        from speech_utils import transcribe
         audio = (st.audio_input("Press the mic and describe the fault")
                  if mode == "Record voice"
                  else st.file_uploader("Audio file", type=["wav", "mp3", "m4a", "ogg"]))
@@ -299,7 +337,7 @@ with bench:
     elif board is None:
         st.info("Select or scan a board to continue.")
     else:
-        st.info("Add a voice note (or type one) to get the diagnosis.")
+        st.info("Add a technician note to get the diagnosis.")
 
 # ================================================================ EVALUATION
 with evaluation:
@@ -391,7 +429,28 @@ with evaluation:
             y=alt.Y("Part type:N", sort="-x", title=None, scale=alt.Scale(paddingInner=0.35)),
             tooltip=["Part type", alt.Tooltip("AP@50:Q", format=".2f")],
         ).properties(height=alt.Step(30)), width="stretch")
-        st.caption(pm["dataset"] + f" Trained for {pm['training']['minutes']:.0f} min on a 4-core CPU.")
+        st.caption(pm["dataset"] + f" Trained for {pm['training']['minutes']:.0f} min"
+                   + (" on a 4-core CPU." if pm["training"].get("device", "cpu") == "cpu" else " on a GPU."))
+        te = MODELS / "tiling_eval.json"
+        if te.exists():
+            tv = json.loads(te.read_text())
+            st.markdown("**Single pass vs tiled detection** "
+                        f"({tv['test_boards']} unseen test boards, {tv['labelled_parts']:,} labelled parts, "
+                        "full-resolution photos)")
+            rows = [{"Mode": "Single pass (whole photo → 1024 px)" if r["mode"] == "single"
+                     else f"Tiled, zoom ×{r['zoom']:g} + whole-photo pass",
+                     "mAP@50 (5 common types)": r["map50_common"],
+                     "AP@50 weighted by part count": r["ap50_part_weighted"],
+                     "Capacitor AP": r["per_class_ap50"]["Capacitor"],
+                     "Resistor AP": r["per_class_ap50"]["Resistor"],
+                     "Recall @0.30": r["recall@0.30"], "Precision @0.30": r["precision@0.30"],
+                     "Parts found / board": r["parts_shown_per_board"],
+                     "Seconds / board": r["seconds_per_board"]} for r in tv["results"]]
+            st.dataframe(pd.DataFrame(rows), hide_index=True, width="stretch")
+            st.caption("Same model in every row; only how the photo is fed to it changes. Tiling keeps small "
+                       "parts at a usable pixel size, so recall on resistors and capacitors rises, at the cost "
+                       "of more passes and somewhat lower precision. Measured by detector/eval_tiling.py. "
+                       "Inductor and Switch (under 20 test parts each) are left out of the 5-type mean.")
     else:
         st.caption("Part detector not trained yet.")
 

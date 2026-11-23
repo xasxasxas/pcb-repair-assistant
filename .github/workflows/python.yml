@@ -19,7 +19,7 @@ jobs:
       - name: Install Tesseract, espeak-ng, ffmpeg
         run: set -o pipefail; (lsb_release -ds; tools/apt_install.sh tesseract-ocr espeak-ng ffmpeg) 2>&1 | tee ci.log
         timeout-minutes: 15
-      - run: pip install -r requirements.txt pytest pytest-timeout
+      - run: pip install -r requirements.txt -r requirements-voice.txt pytest pytest-timeout
       - name: Tests (data, ML models, OCR on demo photos, Android export parity, Streamlit app)
         run: set -o pipefail; pytest -v --timeout=600 --junitxml=pytest-report.xml 2>&1 | tee ci.log
       - name: Publish failure log to the ci-logs branch

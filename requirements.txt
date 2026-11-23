@@ -7,5 +7,4 @@ joblib
 altair
 Pillow
 pytesseract
-faster-whisper
 onnxruntime
