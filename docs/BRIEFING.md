@@ -109,10 +109,9 @@ The board photos come from the Roboflow 100 "printed circuit board" dataset (CC 
 
 | When | What |
 |---|---|
-| Mon 23 Nov | Baseline, tiled detection and chip-marking OCR. Done. |
+| Mon 23 Nov | Baseline, tiled detection and chip-marking OCR, and the web app deployed on Streamlit Community Cloud. Done. |
 | Tue 24 Nov | Install the retrained YOLOv8s detector and re-score it on the 22 test boards |
-| Mon 23 Nov | Web app deployed on Streamlit Community Cloud. Done. |
-| Thu 26 Nov | Buffer for fixes; visual fault detection (a "golden board" anomaly model) only if time allows |
+| Wed 25 to Thu 26 Nov | Buffer for fixes; visual fault detection (a "golden board" anomaly model) only if time allows |
 | Fri 27 to Sun 29 Nov | Slides, demo rehearsal, final numbers in the report |
 
 ## What I'd say in the demo
