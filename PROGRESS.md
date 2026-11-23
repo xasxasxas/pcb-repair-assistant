@@ -61,7 +61,7 @@ Tiling finds about twice as many parts and raises recall from 34% to 46%, withou
 - Notebook: [detector/kaggle_train_tiles.ipynb](detector/kaggle_train_tiles.ipynb).
 - How to run it:
   1. Create a Kaggle dataset from `pcb_tiles.zip`.
-  2. Import the notebook, set the accelerator to GPU T4 x2, turn Internet on, and Run All (about 1–1.5 h).
+  2. Import the notebook, set the accelerator to GPU T4 x2, turn Internet on, and Run All (about 1–1.5 h). If Internet can't be turned on, also add a dataset made from `kaggle_offline.zip`.
   3. Download `detector_export.zip`.
 - After it's back: install the model, re-score it on whole test boards with `eval_tiling.py`, and update the app.
 
@@ -138,3 +138,4 @@ Result (`tools/eval_ic_ocr.py` → `models/ic_ocr_eval.json`):
   - What it took: three image clean-ups × four rotations (16 → 20), look-alike folding (→ 26, but 3 false claims), then line-restricted, digit-checked fuzzy matching (→ 24, 0 false claims).
   - App: a "Chip markings" panel under Components, cached per photo, plus the IC list in the saved job card and a results table on the Model Evaluation tab.
   - Tests: 50 pass.
+- Kaggle run failed at the first cell: the notebook's Internet was off (`Failed to resolve 'pypi.org'`), so `ultralytics` never installed. The notebook now checks for Internet. Online it installs from pip; offline it installs from a `kaggle_offline` input dataset (`data/kaggle_offline.zip`: ultralytics wheels, YOLOv8s starting weights, the AMP-check model and the plot font). ONNX export is optional there, and can be done locally from `best.pt`.
