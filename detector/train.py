@@ -29,6 +29,13 @@ def main():
     ap.add_argument("--batch", type=int, default=4)
     ap.add_argument("--weights", default="yolov8n.pt", help="COCO-pretrained start point")
     ap.add_argument("--smoke", action="store_true", help="2-minute pipeline check, from scratch")
+    ap.add_argument("--data", type=Path, default=DATASET,
+                    help="dataset dir: detector/dataset (whole boards) or a prepare_tiles.py output")
+    ap.add_argument("--device", default="cpu", help="'cpu', '0' for one GPU, '0,1' for two (Kaggle T4 x2)")
+    ap.add_argument("--workers", type=int, default=2)
+    ap.add_argument("--install", action="store_true", default=True,
+                    help="copy the ONNX model into models/ and the Android assets")
+    ap.add_argument("--no-install", dest="install", action="store_false")
     args = ap.parse_args()
 
     from ultralytics import YOLO
@@ -40,9 +47,9 @@ def main():
     _nms = nms.non_max_suppression
     nms.non_max_suppression = lambda *a, **k: _nms(*a, **{**k, "max_time_img": 2.0})
 
-    data_yaml = DATASET / "data.yaml"
+    data_yaml = args.data / "data.yaml"
     cfg = yaml.safe_load(data_yaml.read_text())
-    cfg["path"] = str(DATASET)
+    cfg["path"] = str(args.data.resolve())
     run_yaml = HERE / "data_run.yaml"
     run_yaml.write_text(yaml.safe_dump(cfg, sort_keys=False))
     names = [cfg["names"][i] for i in sorted(cfg["names"])]
@@ -53,8 +60,8 @@ def main():
     t0 = time.time()
     model = YOLO(args.weights)
     model.train(
-        data=str(run_yaml), epochs=args.epochs, imgsz=args.imgsz, batch=args.batch, device="cpu",
-        workers=2, patience=20, time=args.hours, plots=False, project=str(HERE / "runs"), name="parts",
+        data=str(run_yaml), epochs=args.epochs, imgsz=args.imgsz, batch=args.batch, device=args.device,
+        workers=args.workers, patience=20, time=args.hours, plots=False, project=str(HERE / "runs"), name="parts",
         exist_ok=True, seed=0, deterministic=True, fliplr=0.5, flipud=0.5, degrees=5, close_mosaic=5,
         fraction=0.15 if args.smoke else 1.0, val=True, amp=False, max_det=1000,
     )
@@ -63,12 +70,13 @@ def main():
     model = YOLO(str(best))
 
     # Honest final score: the 22 test boards were never used for training or model selection
-    m = model.val(data=str(run_yaml), split="test", imgsz=args.imgsz, batch=args.batch, device="cpu",
+    m = model.val(data=str(run_yaml), split="test", imgsz=args.imgsz, batch=args.batch, device=args.device,
                   plots=False, project=str(HERE / "runs"), name="test", exist_ok=True, max_det=1000)
     per_class = {names[c]: round(float(m.box.ap50[i]), 3) for i, c in enumerate(m.box.ap_class_index)}
 
     onnx = Path(model.export(format="onnx", imgsz=args.imgsz, opset=12, simplify=True, dynamic=False))
-    summary = json.loads((DATASET / "summary.json").read_text())
+    summary = json.loads((args.data / "summary.json").read_text())
+    boards = summary.get("images") or summary["boards"]
     meta = {
         "names": names,
         "imgsz": args.imgsz,
@@ -81,9 +89,21 @@ def main():
         "per_class_ap50": per_class,
         "training": {"base": args.weights, "epochs_requested": args.epochs, "imgsz": args.imgsz,
                      "minutes": round(train_minutes, 1), "smoke_test": args.smoke},
-        "dataset": (f"Trained on {summary['images']['train']} boards, validated on {summary['images']['valid']}, "
-                    f"tested on {summary['images']['test']} unseen boards. Source: {summary['source']}."),
+        "dataset": (f"Trained on {boards['train']} boards, validated on {boards['valid']}, "
+                    f"tested on {boards['test']} unseen boards. Source: {summary['source']}."),
     }
+    if "long_side" in summary:
+        # Trained on tiles: the app must detect on tiles at the same pixel scale.
+        meta["tiling"] = {"long_side": summary["long_side"], "tile": summary["tile"],
+                          "overlap": summary["overlap"], "metrics_are": "per tile (see tiling_eval.json for whole boards)"}
+        meta["training"]["device"] = args.device
+    if not args.install:
+        out = HERE / "runs" / "export"
+        out.mkdir(parents=True, exist_ok=True)
+        shutil.copy(onnx, out / "parts.onnx")
+        (out / "parts.json").write_text(json.dumps(meta, indent=2))
+        print(json.dumps(meta, indent=2))
+        return
     for t in TARGETS:
         t.mkdir(parents=True, exist_ok=True)
         shutil.copy(onnx, t / "parts.onnx")

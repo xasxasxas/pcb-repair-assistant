@@ -9,8 +9,6 @@ on:
       epochs:
         description: "Maximum epochs"
         default: "120"
-  push:
-    paths: ["detector/train.py", "detector/dataset/data.yaml"]
 
 permissions:
   contents: write

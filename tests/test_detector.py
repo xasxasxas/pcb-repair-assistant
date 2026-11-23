@@ -71,3 +71,38 @@ def test_finds_parts_on_demo_boards():
         assert all(0.3 < x["score"] <= 1 for x in parts)
         found.append(len(parts))
     assert sum(n > 0 for n in found) >= 9, found
+
+
+def test_tile_starts_cover_the_image():
+    from detector_utils import tile_starts
+    assert tile_starts(800, 1024, 768) == [0]
+    for length in (1025, 2048, 2900):
+        s = tile_starts(length, 1024, 768)
+        assert s[0] == 0 and s[-1] == length - 1024
+        assert all(b - a <= 768 for a, b in zip(s, s[1:]))
+
+
+@pytest.mark.skipif(not trained(), reason="needs the fully trained detector")
+def test_tiled_detection_finds_more_parts_than_single_pass():
+    det = PartDetector()
+    single = tiled = 0
+    for p in sorted((ROOT / "sample_images").glob("*.jpg"))[:5]:
+        img = Image.open(p)
+        single += len(det.detect(img))
+        parts = det.detect_tiled(img, zoom=1.5)
+        tiled += len(parts)
+        w, h = img.size
+        assert all(0 <= x["box"][0] < x["box"][2] <= w and 0 <= x["box"][1] < x["box"][3] <= h for x in parts)
+    assert tiled > 1.3 * single, (single, tiled)
+
+
+def test_tiling_evaluation_recorded_improvement():
+    """models/tiling_eval.json (detector/eval_tiling.py) backs the app's claim."""
+    path = ROOT / "models" / "tiling_eval.json"
+    if not path.exists():
+        pytest.skip("tiling evaluation not run")
+    res = json.loads(path.read_text())["results"]
+    single = next(r for r in res if r["mode"] == "single")
+    best = max((r for r in res if r["mode"] == "tiled"), key=lambda r: r["map50_common"])
+    assert best["map50_common"] > single["map50_common"]
+    assert best["recall@0.30"] > single["recall@0.30"]
