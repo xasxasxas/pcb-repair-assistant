@@ -1,0 +1,274 @@
+<title>PCB Repair Assistant</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap">
+<style>
+/* Layout: one reading column (~760px) with wide figures; sections follow the bench workflow, then this week's change, then the plan. */
+:root {
+  --bg: #f7f8f5;
+  --surface: #ffffff;
+  --fg: #14201a;
+  --muted: #56645b;
+  --line: #dfe4dc;
+  --mask: #1f6b45;        /* solder-mask green: structure */
+  --copper: #b5651d;      /* copper: highlights */
+  --ai: #1c5cab; --ai-bg: #e6f0fc;
+  --ml: #8a3c12; --ml-bg: #fdeee6;
+  --good: #1f7a3a; --warn: #a15c00;
+  --font-display: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1512; --surface: #161e1a; --fg: #e6ece7; --muted: #9aa89f; --line: #2a352f;
+    --mask: #5cc28d; --copper: #e3954f;
+    --ai: #8bb8f2; --ai-bg: #16283f; --ml: #f0a77f; --ml-bg: #3a2216;
+    --good: #6fd08f; --warn: #f0b45c; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1512; --surface: #161e1a; --fg: #e6ece7; --muted: #9aa89f; --line: #2a352f;
+  --mask: #5cc28d; --copper: #e3954f;
+  --ai: #8bb8f2; --ai-bg: #16283f; --ml: #f0a77f; --ml-bg: #3a2216;
+  --good: #6fd08f; --warn: #f0b45c; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 16px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 64px;
+}
+.wrap { max-width: 960px; margin: 0 auto; }
+.col { max-width: 720px; }
+header { padding-block: 48px 28px; border-bottom: 1px solid var(--line); margin-bottom: 8px; }
+.eyebrow { font-family: var(--font-mono); font-size: 13px; letter-spacing: .06em; text-transform: uppercase; color: var(--mask); }
+h1 { font-family: var(--font-display); font-size: clamp(32px, 6vw, 48px); line-height: 1.1; margin: 8px 0 12px; text-wrap: balance; }
+h2 { font-family: var(--font-display); font-size: 26px; line-height: 1.2; margin: 48px 0 12px; text-wrap: balance; }
+h3 { font-family: var(--font-display); font-size: 19px; margin: 0 0 6px; }
+p { margin: 0 0 14px; }
+.lede { font-size: 19px; color: var(--muted); max-width: 680px; }
+.meta { font-family: var(--font-mono); font-size: 13px; color: var(--muted); }
+code, .mono { font-family: var(--font-mono); font-size: .92em; }
+
+.flow { list-style: none; padding: 0; margin: 20px 0 0; display: grid; gap: 10px; counter-reset: step; }
+.flow li { display: grid; grid-template-columns: 36px 1fr; gap: 12px; align-items: start; counter-increment: step; }
+.flow li::before {
+  content: counter(step); font-family: var(--font-mono); font-weight: 500; font-size: 14px; color: var(--mask);
+  border: 1.5px solid var(--mask); border-radius: 50%; width: 30px; height: 30px; display: grid; place-items: center; margin-top: 1px;
+}
+.flow li > div { min-width: 0; }
+
+.badge { display: inline-block; font-family: var(--font-mono); font-size: 12px; font-weight: 500; padding: 1px 8px; border-radius: 5px; vertical-align: 2px; margin-right: 6px; }
+.badge.ai { color: var(--ai); background: var(--ai-bg); }
+.badge.ml { color: var(--ml); background: var(--ml-bg); }
+.badge.off { color: var(--muted); background: transparent; border: 1px dashed var(--line); }
+
+.tech { display: grid; gap: 0; margin-top: 16px; border-top: 1px solid var(--line); }
+.tech article { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr); gap: 8px 32px; padding: 20px 0; border-bottom: 1px solid var(--line); }
+.tech .how { color: var(--fg); }
+.tech .result { font-family: var(--font-mono); font-size: 14px; color: var(--muted); margin-top: 6px; }
+.tech .result b { color: var(--fg); font-weight: 500; }
+@media (max-width: 640px) { .tech article { grid-template-columns: 1fr; } }
+
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 18px 0; }
+@media (max-width: 640px) { .split { grid-template-columns: 1fr; } }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px; min-width: 0; }
+.panel h3 { font-size: 17px; }
+.panel ul { margin: 6px 0 0; padding-left: 20px; }
+.panel li { margin-bottom: 4px; }
+
+figure { margin: 22px 0; }
+figure img { width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--line); display: block; background: #fff; }
+figcaption { font-size: 14px; color: var(--muted); margin-top: 8px; }
+
+.table-scroll { overflow-x: auto; margin: 16px 0; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; min-width: 620px; font-size: 14px; }
+th, td { padding: 10px 14px; text-align: right; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
+th:first-child, td:first-child { text-align: left; }
+thead th { font-family: var(--font-mono); font-weight: 500; font-size: 12px; letter-spacing: .03em; color: var(--muted); text-transform: uppercase; }
+tbody tr:last-child td { border-bottom: 0; }
+tr.best td { color: var(--fg); font-weight: 600; }
+.up { color: var(--good); }
+.down { color: var(--warn); }
+
+.diagram { overflow-x: auto; margin: 18px 0; }
+.diagram svg { display: block; min-width: 640px; width: 100%; height: auto; }
+.diagram text { font-family: var(--font-mono); font-size: 12px; fill: var(--muted); }
+.diagram .lbl { fill: var(--fg); font-size: 13px; }
+
+.plan { list-style: none; padding: 0; margin: 16px 0; display: grid; gap: 0; border-top: 1px solid var(--line); }
+.plan li { display: grid; grid-template-columns: 110px 1fr auto; gap: 16px; padding: 14px 0; border-bottom: 1px solid var(--line); align-items: baseline; }
+.plan .when { font-family: var(--font-mono); font-size: 13px; color: var(--muted); }
+.plan .what { min-width: 0; }
+.chip { font-family: var(--font-mono); font-size: 12px; padding: 2px 9px; border-radius: 99px; border: 1px solid currentColor; white-space: nowrap; }
+.chip.done { color: var(--good); }
+.chip.next { color: var(--copper); }
+.chip.opt { color: var(--muted); }
+@media (max-width: 560px) { .plan li { grid-template-columns: 1fr auto; } .plan .when { grid-column: 1 / -1; } }
+
+.note { border-left: 3px solid var(--copper); padding: 4px 0 4px 16px; color: var(--muted); margin: 18px 0; }
+a { color: var(--mask); }
+a:focus-visible { outline: 2px solid var(--copper); outline-offset: 2px; }
+</style>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">MS project · progress update · 23 Nov 2026</div>
+  <h1>PCB Repair Assistant</h1>
+  <p class="lede">A repair-bench assistant for electronics technicians. Photograph a faulty circuit board, add a short note, and it reads the board's asset tag, finds the components, diagnoses the fault and recommends whether the board is worth repairing.</p>
+  <p class="meta">Web demo: Streamlit · Offline version: Android tablet app (same models) · Final submission: Mon 30 Nov 2026</p>
+</header>
+
+<section class="col">
+  <h2>What happens at the bench</h2>
+  <p>A board arrives for repair. The technician works through six steps on one screen. Each step is labelled as AI (pretrained deep learning) or ML (classical models we trained ourselves).</p>
+  <ol class="flow">
+    <li><div><span class="badge ai">AI</span><b>Read the asset tag.</b> OCR finds the yellow tag in the photo, crops and cleans it, and reads the board family, revision and serial number.</div></li>
+    <li><div><span class="badge ai">AI</span><b>Find the components.</b> An object detector boxes every part it recognises and counts them by type.</div></li>
+    <li><div><b>Look up the board's history.</b> The serial number pulls age and previous repairs from the board registry. This is a database lookup, not AI.</div></li>
+    <li><div><b>Describe the fault.</b> The technician types a short note, e.g. <i>"Green deposits on the pins, salt residue across the lower edge."</i></div></li>
+    <li><div><span class="badge ml">ML</span><b>Diagnose.</b> A text classifier turns the note into one of six fault categories and shows the words that drove the decision.</div></li>
+    <li><div><span class="badge ml">ML</span><b>Recommend.</b> A Random Forest predicts the risk that the board is beyond economic repair (BER) and the expected repair hours. The job card is saved to a log that can be exported as CSV.</div></li>
+  </ol>
+</section>
+
+<section>
+  <h2 class="col">The AI and ML techniques, one by one</h2>
+  <p class="col">All scores are on held-out data the models never saw during training.</p>
+  <div class="tech">
+    <article>
+      <div><span class="badge ai">AI</span><h3 style="display:inline">OCR · Tesseract</h3><p class="result">pretrained, used as-is</p></div>
+      <div class="how">
+        <p>Tesseract reads text with an LSTM neural network. Raw OCR on a whole board photo fails, because silkscreen text and part markings drown out the tag. Our pipeline first finds the yellow tag by colour, crops it, boosts contrast and applies an Otsu threshold, then runs OCR on that clean crop. A parser fixes common OCR confusions, such as O read as 0.</p>
+        <p class="result">Serials read correctly on the 50 demo photos: raw <b>15/50</b> → with tag cleanup <b>49/50</b></p>
+      </div>
+    </article>
+    <article>
+      <div><span class="badge ai">AI</span><h3 style="display:inline">Part detector · YOLOv8</h3><p class="result">COCO-pretrained, fine-tuned by us</p></div>
+      <div class="how">
+        <p>YOLO is a convolutional network that predicts boxes and part types for the whole image in one pass. We fine-tuned it on 137 real board photos from an open dataset (Roboflow 100, CC BY 4.0), merged into 7 part types: IC, capacitor, resistor, connector, transistor/diode, inductor and switch. The boards are split so that no board appears in both training and testing.</p>
+        <p class="result">Test mAP@50 <b>0.35</b>. Strong on ICs (0.63), switches and connectors; weak on tiny resistors and capacitors, which this week's work targets.</p>
+      </div>
+    </article>
+    <article>
+      <div><span class="badge ml">ML</span><h3 style="display:inline">Fault classifier · TF-IDF + Logistic Regression</h3><p class="result">trained by us</p></div>
+      <div class="how">
+        <p>TF-IDF turns each note into a vector of word and word-pair weights, scored higher when a term is frequent in that note but rare overall. We compared Naive Bayes, Logistic Regression and Linear SVM with 5-fold cross-validation. Logistic Regression was chosen because it gives probabilities and per-word explanations: each word's weight for the predicted class shows why the model decided.</p>
+        <p class="result">Test accuracy <b>95%</b> on 120 held-out notes · CV F1 0.977</p>
+      </div>
+    </article>
+    <article>
+      <div><span class="badge ml">ML</span><h3 style="display:inline">Repair predictor · Random Forest</h3><p class="result">trained by us</p></div>
+      <div class="how">
+        <p>Inputs are board type, age, previous repairs and the predicted fault. A Random Forest classifier, a vote of many decision trees, gives the BER risk; a Random Forest regressor gives the repair hours. Feature importance shows what drives each decision: board age and fault type drive scrap decisions, and fault type drives repair time.</p>
+        <p class="result">BER ROC AUC <b>0.82</b> · repair-hours error <b>0.43 h</b> (guessing the average: 1.24 h)</p>
+      </div>
+    </article>
+    <article>
+      <div><span class="badge off">archived</span><h3 style="display:inline">Speech-to-text · Whisper</h3><p class="result">kept in code, off in the web demo</p></div>
+      <div class="how">
+        <p>The voice-note input is switched off for the classroom web demo, since the hosted app can't rely on a microphone, and the technician types the note instead. The code is kept and can be switched back on. The offline Android app keeps its own on-device speech recognition (Vosk).</p>
+      </div>
+    </article>
+  </div>
+  <p class="note col">Data: the repair records (600) and board histories are synthetic, generated from fault-specific phrase banks with a fixed seed, so no real facility data is used. The board photos are real and openly licensed.</p>
+</section>
+
+<section>
+  <h2 class="col">This week: finding the small parts</h2>
+  <div class="col">
+    <p><b>The problem.</b> Board photos are about 2,000–2,900 px wide, but the detector looks at the whole photo shrunk to 1,024 px. A small SMD resistor ends up only a few pixels wide, too small for the network to see, which is why resistors and capacitors scored only about 0.25.</p>
+    <p><b>The fix: tiled (sliced) detection.</b> Enlarge the photo, cut it into overlapping 1,024 px tiles, and run the detector on each tile, so small parts keep enough pixels. Then map every box back onto the original photo and merge the duplicates.</p>
+  </div>
+
+  <div class="diagram" role="img" aria-label="Diagram: single pass shrinks the photo to 1024 px; tiled detection cuts an enlarged photo into overlapping 1024 px tiles, detects in each, then merges boxes with non-maximum suppression.">
+    <svg viewBox="0 0 900 250" xmlns="http://www.w3.org/2000/svg">
+      <text x="0" y="16" class="lbl">Single pass</text>
+      <rect x="0" y="28" width="150" height="100" rx="4" fill="none" stroke="var(--mask)" stroke-width="2"/>
+      <text x="8" y="146">photo 2048 px</text>
+      <path d="M160 78 H210" stroke="var(--muted)" stroke-width="1.5" fill="none" marker-end="url(#a)"/>
+      <rect x="220" y="53" width="75" height="50" rx="3" fill="none" stroke="var(--mask)" stroke-width="2"/>
+      <text x="220" y="122">shrunk to 1024</text>
+      <text x="220" y="138">small parts: 2–4 px</text>
+      <path d="M305 78 H355" stroke="var(--muted)" stroke-width="1.5" fill="none" marker-end="url(#a)"/>
+      <text x="365" y="82" class="lbl">1 pass · misses small parts</text>
+
+      <text x="0" y="178" class="lbl">Tiled</text>
+      <g transform="translate(0,188)">
+        <rect x="0" y="0" width="150" height="56" rx="4" fill="none" stroke="var(--mask)" stroke-width="2"/>
+        <rect x="4" y="4" width="62" height="48" fill="none" stroke="var(--copper)" stroke-width="1.5"/>
+        <rect x="44" y="4" width="62" height="48" fill="none" stroke="var(--copper)" stroke-width="1.5" stroke-dasharray="4 3"/>
+        <rect x="84" y="4" width="62" height="48" fill="none" stroke="var(--copper)" stroke-width="1.5"/>
+      </g>
+      <path d="M160 216 H210" stroke="var(--muted)" stroke-width="1.5" fill="none" marker-end="url(#a)"/>
+      <text x="220" y="206" class="lbl">detect each 1024 px tile</text>
+      <text x="220" y="222">overlap 25% · parts keep their size</text>
+      <text x="220" y="238">+ one whole-photo pass for big parts</text>
+      <path d="M500 216 H550" stroke="var(--muted)" stroke-width="1.5" fill="none" marker-end="url(#a)"/>
+      <text x="560" y="206" class="lbl">merge</text>
+      <text x="560" y="222">drop boxes cut by a tile edge</text>
+      <text x="560" y="238">non-max suppression removes duplicates</text>
+      <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
+    </svg>
+  </div>
+
+  <figure>
+    <img src="__IMG__" alt="The same Zybo board processed two ways: single pass finds 97 parts, tiled detection finds 160 parts, mostly additional small capacitors and resistors.">
+    <figcaption>Same model, same photo (Digilent Zybo, demo board 1686). Tiled detection finds 160 parts against 97: capacitors 26 → 59, resistors 24 → 40, connectors 24 → 35. The yellow tag is still sometimes boxed as a "connector", a known limitation.</figcaption>
+  </figure>
+
+  <p class="col"><b>Measured, not assumed.</b> We scored both modes against the hand-labelled parts on the 22 held-out test boards (4,709 parts), at full photo resolution:</p>
+  <div class="table-scroll">
+    <table>
+      <thead><tr><th>Detection mode</th><th>mAP@50 (5 common types)</th><th>Capacitor AP</th><th>Resistor AP</th><th>Recall @0.30</th><th>Precision @0.30</th><th>Parts / board</th><th>Time / board</th></tr></thead>
+      <tbody>
+        <tr><td>Single pass (current)</td><td>0.405</td><td>0.294</td><td>0.305</td><td>0.34</td><td>0.46</td><td>96</td><td>0.12 s</td></tr>
+        <tr class="best"><td>Tiled, zoom ×1.5 (new default)</td><td class="up">0.455</td><td class="up">0.366</td><td class="up">0.379</td><td class="up">0.46</td><td class="down">0.40</td><td class="up">181</td><td>0.52 s</td></tr>
+        <tr><td>Tiled, zoom ×2</td><td>0.437</td><td>0.406</td><td>0.371</td><td>0.47</td><td>0.36</td><td>217</td><td>0.68 s</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col">
+    <p><b>Reading the result.</b> Without any retraining, tiling finds about twice as many parts and raises recall from 34% to 46%. The cost is about four times the compute, still under a second on a laptop CPU, and somewhat lower precision. The model was trained on shrunk photos, so it has never seen parts at the enlarged size. Retraining on tiles fixes that mismatch, which is the next step. Inductors and switches (under 20 test parts each) are left out of the mean because a handful of boxes swings their score.</p>
+    <p>The app now has a <b>"Detailed detection (tiles)"</b> switch, so the class can see the difference live, and the Model Evaluation tab shows this table.</p>
+  </div>
+</section>
+
+<section class="col">
+  <h2>Getting things in order</h2>
+  <div class="split">
+    <div class="panel">
+      <h3>Done today</h3>
+      <ul>
+        <li>Project moved to a new GitHub repository, with full history</li>
+        <li>Environment rebuilt; 42 automated tests pass (data, models, OCR, detector, web app)</li>
+        <li>Voice input archived for the web demo</li>
+        <li>Tiled detection built, measured and added to the app</li>
+        <li>Tiled training set prepared: 785 tiles from 137 training boards</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3>Kept ready for Android</h3>
+      <ul>
+        <li>Every model ships as ONNX or JSON, which the phone runs directly</li>
+        <li>Tiling uses the same decoding and merge rule as the phone's decoder</li>
+        <li>Phone/Python parity tests stay in CI</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="col">
+  <h2>Plan to final submission</h2>
+  <ul class="plan">
+    <li><span class="when">Mon 23 Nov</span><span class="what">Migration, baseline, voice archived, tiled detection measured and in the app</span><span class="chip done">done</span></li>
+    <li><span class="when">Tue 24 Nov</span><span class="what">Retrain a larger detector (YOLOv8s) on the tiles on a free Kaggle GPU, then re-score on the whole test boards</span><span class="chip next">next</span></li>
+    <li><span class="when">Wed 25 Nov</span><span class="what">Read IC markings: run OCR on each detected chip to show part numbers such as "ATmega2560"</span><span class="chip next">next</span></li>
+    <li><span class="when">Thu 26 Nov</span><span class="what">Deploy the web demo on Streamlit Community Cloud and test it end to end</span><span class="chip next">next</span></li>
+    <li><span class="when">Fri 27 Nov</span><span class="what">Visual fault detection with a golden-board anomaly model, only if time allows</span><span class="chip opt">optional</span></li>
+    <li><span class="when">Sat–Sun</span><span class="what">Slides, demo script rehearsal, final report numbers</span><span class="chip next">next</span></li>
+  </ul>
+  <h2>Known limitations</h2>
+  <p>Repair records are synthetic. The detector still misses some of the smallest parts on dense boards, and it sometimes boxes the asset tag as a connector. Rare part types (inductors, switches) have too few examples to score reliably. The web demo takes typed notes only.</p>
+</section>
+</div>
