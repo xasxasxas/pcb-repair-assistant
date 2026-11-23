@@ -1,5 +1,7 @@
 # PCB Repair Assistant
 
+> **Course progress briefing:** [docs/BRIEFING.md](docs/BRIEFING.md) · **Work log:** [PROGRESS.md](PROGRESS.md) · **Deploying the demo:** [docs/DEPLOY.md](docs/DEPLOY.md)
+
 **Live web app:** https://pcb-repair-assistant.streamlit.app ·
 **Android APK:** [Releases → latest](https://github.com/zanderjames86/repair_assist/releases/tag/latest)
 

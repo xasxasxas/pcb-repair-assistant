@@ -4,6 +4,7 @@ MS course project. **Final submission: Monday 30 Nov 2026.** The class demo uses
 
 - **Status:** Track A in progress. Tiled detection and IC marking OCR are done and measured; the YOLOv8s retrain is running on Kaggle.
 - **Repo:** `xasxasxas/pcb-repair-assistant` (private). The work log is [at the bottom](#work-log).
+- **Class briefing:** [docs/BRIEFING.md](docs/BRIEFING.md) · **Deploy steps:** [docs/DEPLOY.md](docs/DEPLOY.md)
 
 ---
 
@@ -108,7 +109,7 @@ Result (`tools/eval_ic_ocr.py` → `models/ic_ocr_eval.json`):
 | Mon 23 Nov | Migration, baseline, voice archived, tiled detection measured and in the app | done |
 | Tue 24 Nov | YOLOv8s retrain on tiles (Kaggle), then re-score on whole test boards | next |
 | Wed 25 Nov | IC marking OCR | done early (Mon) |
-| Thu 26 Nov | Deploy on Streamlit Community Cloud, end-to-end test | |
+| Thu 26 Nov | Deploy on Streamlit Community Cloud, end-to-end test | ready; needs your sign-in (docs/DEPLOY.md) |
 | Fri 27 Nov | Track B, only if time allows | optional |
 | Sat–Sun | Slides, demo rehearsal, final report numbers | |
 
@@ -140,3 +141,6 @@ Result (`tools/eval_ic_ocr.py` → `models/ic_ocr_eval.json`):
   - Tests: 50 pass.
 - Kaggle run failed at the first cell: the notebook's Internet was off (`Failed to resolve 'pypi.org'`), so `ultralytics` never installed. The notebook now checks for Internet. Online it installs from pip; offline it installs from a `kaggle_offline` input dataset (`data/kaggle_offline.zip`: ultralytics wheels, YOLOv8s starting weights, the AMP-check model and the plot font). ONNX export is optional there, and can be done locally from `best.pt`.
 - Kaggle run 2: training started (YOLOv8s, 1024 px tiles, about 50 s per epoch on a T4, so about 1.5 h for 100 epochs). It then crashed after epoch 1 in ultralytics' Ray Tune hook (`ray.train._internal.session` has no `_get_session`): Kaggle pre-installs a newer `ray`. The notebook now switches off all ultralytics third-party integrations (Ray Tune, W&B, MLflow, Comet, ClearML, DVC, Neptune, TensorBoard, HUB) before training.
+- **Deployment prep:** dropped ffmpeg from `packages.txt` (only needed for the archived voice input). A headless run of the full bench flow on 3 boards took 8–11 s per new board and about 0.5 GB of memory, within Streamlit Cloud's free tier. I tried to deploy through the browser, but it isn't signed in to share.streamlit.io, and signing in means accepting Streamlit's terms and granting GitHub access, which only the account owner should do. I stopped there and wrote the steps in `docs/DEPLOY.md`.
+- **Class briefing:** `docs/BRIEFING.md`, written for the MS AI class (submit and present). It covers the problem, the system flow, the AI vs ML parts with held-out results, this week's work (tiled detection, IC marking OCR, retrain in progress), limitations, data licences, the plan, and the demo script.
+- Demo fact-check while writing the briefing: board_8601 (17 years old) is BER whatever the note says, so the Repairable → BER flip has to be shown on board_1686 (31% → 71% with the corrosion note). On board_8601, tiled detection finds 273 parts against 195 for a single pass.
