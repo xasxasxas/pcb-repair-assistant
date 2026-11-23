@@ -1,5 +1,6 @@
 # PCB Repair Assistant
 
+> **Live demo:** https://pcb-repair-assistant-b7yfndd6wrb2vbxtzvpszz.streamlit.app/  
 > **Course progress briefing:** [docs/BRIEFING.md](docs/BRIEFING.md) · **Work log:** [PROGRESS.md](PROGRESS.md) · **Deploying the demo:** [docs/DEPLOY.md](docs/DEPLOY.md)
 
 **Live web app:** https://pcb-repair-assistant.streamlit.app ·

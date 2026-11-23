@@ -111,7 +111,7 @@ The board photos come from the Roboflow 100 "printed circuit board" dataset (CC 
 |---|---|
 | Mon 23 Nov | Baseline, tiled detection and chip-marking OCR. Done. |
 | Tue 24 Nov | Install the retrained YOLOv8s detector and re-score it on the 22 test boards |
-| Wed 25 Nov | Deploy the web app on Streamlit Community Cloud and test it end to end |
+| Mon 23 Nov | Web app deployed on Streamlit Community Cloud. Done. |
 | Thu 26 Nov | Buffer for fixes; visual fault detection (a "golden board" anomaly model) only if time allows |
 | Fri 27 to Sun 29 Nov | Slides, demo rehearsal, final numbers in the report |
 
@@ -119,4 +119,4 @@ The board photos come from the Roboflow 100 "printed circuit board" dataset (CC 
 
 I'd open with board_8601: the tag is read, 273 components are boxed (195 with a single pass), and both Intel chipset chips are named. Next I'd toggle tiled detection off and on, so the class can watch the small parts disappear and come back. That board is 17 years old, and the Random Forest marks it BER whatever the note says, which shows how heavily age weighs. For the contrast I'd switch to board_1686, a two-year-old Zybo. With a short-circuit note it's Repairable at about 31% BER risk; with the salt-corrosion note it flips to BER at 71%. Then I'd open the Model Evaluation tab to show where each number in this briefing comes from.
 
-The source code, tests and full work log are in the project repository (PROGRESS.md).
+The live demo is at https://pcb-repair-assistant-b7yfndd6wrb2vbxtzvpszz.streamlit.app/. The source code, tests and full work log are in the project repository (PROGRESS.md).

@@ -1,5 +1,9 @@
 # Deploying the web demo (Streamlit Community Cloud)
 
+**Live:** https://pcb-repair-assistant-b7yfndd6wrb2vbxtzvpszz.streamlit.app/
+
+Streamlit redeploys automatically on every push to `main`.
+
 The repo is ready to deploy as-is. This needs your own sign-in, about 10 minutes, once.
 
 1. Go to https://share.streamlit.io and choose **Continue with GitHub**. Sign in as `xasxasxas`.

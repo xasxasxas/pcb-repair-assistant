@@ -280,13 +280,15 @@ with bench:
                             m = chip["match"]
                             st.markdown(f"**{m['key']}**  \n{m['manufacturer']}  \n"
                                         f"<small>{m['description']}</small>", unsafe_allow_html=True)
-                        elif chip["part"]:
-                            st.markdown(f"**{chip['part']}**  \n<small>not in catalogue</small>",
-                                        unsafe_allow_html=True)
                         else:
-                            st.markdown("<small>marking not readable</small>", unsafe_allow_html=True)
+                            # unmatched OCR text is mostly noise from texture and logos: don't
+                            # present it as a part number; it stays visible in the expander
+                            st.markdown("**Not identified**  \n<small>no catalogue part matched</small>",
+                                        unsafe_allow_html=True)
                         with st.expander("OCR text"):
                             st.text(chip["text"].strip() or "(nothing read)")
+                            if not chip["match"] and chip["part"]:
+                                st.caption(f"Unconfirmed reading: {chip['part']}")
                             st.caption(f"rotation {chip['rotation']}°")
             else:
                 st.session_state.chips = []

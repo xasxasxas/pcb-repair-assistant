@@ -4,6 +4,7 @@ MS course project. **Final submission: Monday 30 Nov 2026.** The class demo uses
 
 - **Status:** Track A in progress. Tiled detection and IC marking OCR are done and measured; the YOLOv8s retrain is running on Kaggle.
 - **Repo:** `xasxasxas/pcb-repair-assistant` (private). The work log is [at the bottom](#work-log).
+- **Live demo:** https://pcb-repair-assistant-b7yfndd6wrb2vbxtzvpszz.streamlit.app/
 - **Class briefing:** [docs/BRIEFING.md](docs/BRIEFING.md) · **Deploy steps:** [docs/DEPLOY.md](docs/DEPLOY.md)
 
 ---
@@ -109,7 +110,7 @@ Result (`tools/eval_ic_ocr.py` → `models/ic_ocr_eval.json`):
 | Mon 23 Nov | Migration, baseline, voice archived, tiled detection measured and in the app | done |
 | Tue 24 Nov | YOLOv8s retrain on tiles (Kaggle), then re-score on whole test boards | next |
 | Wed 25 Nov | IC marking OCR | done early (Mon) |
-| Thu 26 Nov | Deploy on Streamlit Community Cloud, end-to-end test | ready; needs your sign-in (docs/DEPLOY.md) |
+| Thu 26 Nov | Deploy on Streamlit Community Cloud, end-to-end test | done early (Mon) |
 | Fri 27 Nov | Track B, only if time allows | optional |
 | Sat–Sun | Slides, demo rehearsal, final report numbers | |
 
@@ -144,3 +145,9 @@ Result (`tools/eval_ic_ocr.py` → `models/ic_ocr_eval.json`):
 - **Deployment prep:** dropped ffmpeg from `packages.txt` (only needed for the archived voice input). A headless run of the full bench flow on 3 boards took 8–11 s per new board and about 0.5 GB of memory, within Streamlit Cloud's free tier. I tried to deploy through the browser, but it isn't signed in to share.streamlit.io, and signing in means accepting Streamlit's terms and granting GitHub access, which only the account owner should do. I stopped there and wrote the steps in `docs/DEPLOY.md`.
 - **Class briefing:** `docs/BRIEFING.md`, written for the MS AI class (submit and present). It covers the problem, the system flow, the AI vs ML parts with held-out results, this week's work (tiled detection, IC marking OCR, retrain in progress), limitations, data licences, the plan, and the demo script.
 - Demo fact-check while writing the briefing: board_8601 (17 years old) is BER whatever the note says, so the Repairable → BER flip has to be shown on board_1686 (31% → 71% with the corrosion note). On board_8601, tiled detection finds 273 parts against 195 for a single pass.
+- **Deployed** on Streamlit Community Cloud: https://pcb-repair-assistant-b7yfndd6wrb2vbxtzvpszz.streamlit.app/ (deployed by the account owner).
+  - Checked on the live site: the health endpoint returns ok.
+  - Default board_1075: tag read (S/N 1075), tiled detection 368 parts, chip reading identifies a Realtek RTL8110.
+  - Board history fills in; the corrosion note gives Corrosion at 99% → BER 59%, 5.6 h.
+  - All Model Evaluation sections render.
+- Fix after the live check: chips with no catalogue match used to show raw OCR noise (e.g. "GHALOUS46A") as if it were a part number. They now show "Not identified", and the raw text and unconfirmed reading stay in the "OCR text" expander.
