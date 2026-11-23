@@ -1,0 +1,62 @@
+key,manufacturer,description
+XC7Z010,Xilinx,Zynq-7000 SoC (FPGA + dual ARM Cortex-A9)
+XC7Z020,Xilinx,Zynq-7000 SoC (FPGA + dual ARM Cortex-A9)
+XC7A100T,Xilinx,Artix-7 FPGA
+XC7A35T,Xilinx,Artix-7 FPGA
+XC6SLX,Xilinx,Spartan-6 FPGA
+XC3S,Xilinx,Spartan-3 FPGA
+XC2S,Xilinx,Spartan-II FPGA
+5CEBA4F23,Intel (Altera),Cyclone V E FPGA
+5CSEMA,Intel (Altera),Cyclone V SoC FPGA
+EP4CE,Intel (Altera),Cyclone IV E FPGA
+FT2232HL,FTDI,Dual USB to UART/FIFO bridge
+FT232R,FTDI,USB to UART bridge
+CH340,WCH,USB to UART bridge
+CP2102,Silicon Labs,USB to UART bridge
+ATMEGA2560,Microchip (Atmel),8-bit AVR microcontroller
+ATMEGA328,Microchip (Atmel),8-bit AVR microcontroller
+ATMEGA16U2,Microchip (Atmel),USB microcontroller (USB-serial on Arduino)
+STM32F,STMicroelectronics,32-bit ARM Cortex-M microcontroller
+MK64FN1M0,NXP,Kinetis K64 ARM Cortex-M4 microcontroller
+ESP32,Espressif,Wi-Fi/Bluetooth SoC
+ESP8266,Espressif,Wi-Fi SoC
+80C535,Siemens,8051-family microcontroller
+MB91305,Fujitsu,FR-series 32-bit RISC microcontroller
+82443BX,Intel,440BX AGPset north bridge
+82371FB,Intel,PIIX PCI ISA IDE Xcelerator (south bridge)
+82437FX,Intel,430FX PCIset system controller
+82801,Intel,I/O controller hub (ICH south bridge)
+VT8235,VIA,V-Link south bridge
+VT8231,VIA,PCI south bridge
+VT8233A,VIA,V-Link south bridge
+VT6307,VIA,IEEE 1394 FireWire controller
+RTL8110,Realtek,Gigabit Ethernet controller
+RTL8111,Realtek,Gigabit Ethernet controller
+RTL8139,Realtek,Fast Ethernet controller
+963L,SiS,South bridge (SiS963L)
+LPC47M,SMSC,LPC Super I/O controller
+GM1601,Genesis Microchip,LCD display controller
+MDIN150,Macro Image Technology,HD video deinterlacer
+SDA6001,Micronas,TV teletext / OSD processor
+SPHE1003,Sunplus,DVD/MPEG decoder SoC
+MN2WS0025,Panasonic,Digital TV / media SoC
+AD9882,Analog Devices,Dual DVI/analog display interface
+ADUM2400,Analog Devices,4-channel digital isolator
+ADUM2401,Analog Devices,4-channel digital isolator
+ADV7511,Analog Devices,HDMI transmitter
+HY5DV641622,Hynix,64 Mbit DDR SDRAM
+D9PXV,Micron,DDR3 SDRAM (FBGA code)
+LH28F640,Sharp,64 Mbit flash memory
+39SF020,SST (Microchip),2 Mbit parallel flash memory
+27C256,Intel / various,256 Kbit UV EPROM
+KS245,Texas Instruments,Octal bus transceiver (marking code)
+MASCOT,MRT,Video/display controller (MASCOT V2)
+LM358,Texas Instruments / various,Dual operational amplifier
+LM317,Texas Instruments / various,Adjustable linear voltage regulator
+AMS1117,Advanced Monolithic Systems,1 A low-dropout regulator
+NE555,Texas Instruments / various,Timer
+74HC595,various,8-bit shift register
+MAX232,Maxim / various,RS-232 line driver/receiver
+TPS54,Texas Instruments,Step-down DC-DC converter
+W25Q,Winbond,Serial SPI flash memory
+24C02,various,2 Kbit I2C EEPROM

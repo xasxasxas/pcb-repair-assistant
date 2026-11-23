@@ -2,7 +2,7 @@
 
 MS course project. **Final submission: Monday 30 Nov 2026.** The class demo uses the Streamlit web app; the offline Android app (same models) follows later.
 
-- **Status:** Track A (more detailed component detection) in progress. Tiled detection is done and measured; next is the YOLOv8s retrain on a Kaggle GPU.
+- **Status:** Track A in progress. Tiled detection and IC marking OCR are done and measured; the YOLOv8s retrain is running on Kaggle.
 - **Repo:** `xasxasxas/pcb-repair-assistant` (private). The work log is [at the bottom](#work-log).
 
 ---
@@ -24,6 +24,7 @@ All scores are on held-out data the models never saw during training.
 
 | Type | Technique | How it works | Result |
 |---|---|---|---|
+| AI, pretrained | **OCR on chip markings: Tesseract + parts catalogue** | Each large detected IC is cropped, cleaned up and read at four rotations, and the text is matched against a local parts list. See Track A step 3. | Readable chips identified: plain **4/36**, ours **24/36**, 0 false claims |
 | AI, pretrained | **OCR: Tesseract** | Tesseract reads text with an LSTM neural network. Raw OCR on the whole photo fails, because silkscreen text and part markings drown out the tag. We first find the yellow tag by colour, crop it, stretch contrast and apply an Otsu threshold, then run OCR on the clean crop. A parser fixes common confusions such as O read as 0. | Serials read on 50 demo photos: raw **15/50**, with tag cleanup **49/50** |
 | AI, fine-tuned by us | **Part detector: YOLOv8n** | A convolutional network that predicts boxes and part types in one pass. It's fine-tuned from COCO weights on 137 real board photos (Roboflow 100, CC BY 4.0), merged into 7 types: IC, capacitor, resistor, connector, transistor/diode, inductor, switch. The split is by board, so no board appears in both training and testing. | Test mAP@50 **0.35**. ICs 0.63; tiny resistors and capacitors about 0.25 (see Track A) |
 | ML, trained by us | **Fault classifier: TF-IDF + Logistic Regression** | TF-IDF turns a note into word and word-pair weights, high when a term is frequent in this note but rare overall. Naive Bayes, Logistic Regression and Linear SVM were compared with 5-fold cross-validation. Logistic Regression was kept because it gives probabilities and per-word explanations. | Test accuracy **95%** (120 notes), CV F1 0.977 |
@@ -64,7 +65,32 @@ Tiling finds about twice as many parts and raises recall from 34% to 46%, withou
   3. Download `detector_export.zip`.
 - After it's back: install the model, re-score it on whole test boards with `eval_tiling.py`, and update the app.
 
-**Step 3: read IC markings.** Crop each detected IC and run OCR to show part numbers such as "ATmega2560".
+**Step 3: read IC markings. Done.**
+For the 4 largest detected ICs on a board (at least 60 px in the photo), the app crops the chip and reads its part number, then looks it up in a local parts catalogue (`data/ic_catalogue.csv`, 62 parts). It shows the part, manufacturer and function, e.g. **82437FX · Intel · 430FX PCIset system controller**.
+
+Why it's hard, and what the pipeline does (`ic_ocr.py`):
+- Chip markings are tiny, low-contrast laser etching, light text on a dark package, and the chip can sit at any of four rotations.
+- The crop is upscaled, contrast-stretched, sharpened and inverted to dark-on-light text.
+- Tesseract reads it at 0°, 90°, 180° and 270°, with up to 3 clean-ups: the whole crop; pins trimmed plus a median filter; sparse-text mode.
+- The reading Tesseract is most confident in wins, and an exact catalogue hit stops the search early.
+- The catalogue match tolerates OCR look-alikes (S/5, O/0, B/8, Z/2, I/1). To avoid inventing parts from junk, fuzzy matching stays within one printed line, the raw text must contain at least half the key's digits, and all-letter keys need an exact match.
+
+Ground truth (`tests/ic_markings.json`): the two largest detected ICs on each of the 50 demo boards, 91 crops in all, read by eye.
+- **36** carry a readable part number.
+- **39** are unreadable: covered by stickers or heatsinks, unmarked, or too small.
+- **16** are not chips at all (detector false positives: connectors, switches, a relay).
+
+Result (`tools/eval_ic_ocr.py` → `models/ic_ocr_eval.json`):
+
+| Pipeline | Readable chips identified | Wrong part named | Part claimed on the 55 other crops | Time / chip |
+|---|---|---|---|---|
+| Plain Tesseract on the crop | 4 / 36 (11%) | 0 | 0 | 0.13 s |
+| **Our pipeline** | **24 / 36 (67%)** | **0** | **0** | 2.3 s |
+
+- The catalogue includes the parts on these boards, so this measures reading and matching, not discovering unknown parts. That is how a repair shop's parts list would be used.
+- Higher-resolution photos didn't help (14/36 on the 2,000+ px originals), because the upscaling already covers resolution. The misses come from texture, glare and logos, not pixel count.
+- The OCR corrected one of my hand labels: the chip I read as VT8231 is really a VT8233A.
+- Good demo boards for this step: **board_8601** (Intel 82437FX + 82371FB) and **board_9387** (Altera Cyclone V). board_2485 (Xilinx Artix-7) and board_2542 (MicroZed, Xilinx Zynq) also work.
 
 **Track B (optional, only if time allows):** visual fault detection with a golden-board anomaly model (PatchCore on the VisA PCB images).
 
@@ -73,6 +99,7 @@ Tiling finds about twice as many parts and raises recall from 34% to 46%, withou
 - Every model ships as ONNX or JSON, which the phone runs directly.
 - Tiling reuses the same decode and NMS rule as `YoloDecoder.java`; the tiling loop itself still needs porting.
 - The phone/Python parity tests stay in CI.
+- IC marking OCR: the parts catalogue is a plain CSV the app can bundle. On the phone, the OCR engine would be ML Kit instead of Tesseract, with the same crop, rotation and matching logic; the ground-truth crops can score it the same way.
 
 ## Plan to submission
 
@@ -80,7 +107,7 @@ Tiling finds about twice as many parts and raises recall from 34% to 46%, withou
 |---|---|---|
 | Mon 23 Nov | Migration, baseline, voice archived, tiled detection measured and in the app | done |
 | Tue 24 Nov | YOLOv8s retrain on tiles (Kaggle), then re-score on whole test boards | next |
-| Wed 25 Nov | IC marking OCR | |
+| Wed 25 Nov | IC marking OCR | done early (Mon) |
 | Thu 26 Nov | Deploy on Streamlit Community Cloud, end-to-end test | |
 | Fri 27 Nov | Track B, only if time allows | optional |
 | Sat–Sun | Slides, demo rehearsal, final report numbers | |
@@ -106,3 +133,8 @@ Tiling finds about twice as many parts and raises recall from 34% to 46%, withou
 - Fix: a long-running local server kept a detector built from old code (`AttributeError: detect_tiled`). The detector cache now reloads when `detector_utils.py` changes.
 - Fix: Kaggle rejected `pcb_tiles.zip` because Windows' Compress-Archive wrote `\` inside the zip paths. Rebuilt it with `/`; `prepare_tiles.py --zip` now does this.
 - Tests: 42 pass; CI green.
+- **Track A step 3, IC marking OCR** (while Kaggle trains): `ic_ocr.py`, a parts catalogue, 91 hand-labelled chip crops, `tools/eval_ic_ocr.py`.
+  - Plain Tesseract identifies 4/36 readable chips; ours identifies 24/36, with 0 wrong parts and 0 false claims on 55 non-readable crops.
+  - What it took: three image clean-ups × four rotations (16 → 20), look-alike folding (→ 26, but 3 false claims), then line-restricted, digit-checked fuzzy matching (→ 24, 0 false claims).
+  - App: a "Chip markings" panel under Components, cached per photo, plus the IC list in the saved job card and a results table on the Model Evaluation tab.
+  - Tests: 50 pass.

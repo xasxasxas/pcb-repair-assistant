@@ -112,10 +112,25 @@ def _detect_cached(key, tiled, _detector, _img):
     return _detector.detect(_img)
 
 
-def run_detection(detector, img, tiled):
+def image_key(img):
     import hashlib
-    key = hashlib.md5(img.convert("RGB").tobytes()).hexdigest() + str(id(detector.session))
-    return _detect_cached(key, tiled, detector, img)
+    return hashlib.md5(img.convert("RGB").tobytes()).hexdigest()
+
+
+def run_detection(detector, img, tiled):
+    return _detect_cached(image_key(img) + str(id(detector.session)), tiled, detector, img)
+
+
+@st.cache_resource
+def load_ic_catalogue():
+    from ic_ocr import load_catalogue
+    return load_catalogue()
+
+
+@st.cache_data(max_entries=32, show_spinner=False)
+def read_chip_markings(key, _img, _parts):
+    from ic_ocr import read_ics
+    return read_ics(_img, _parts, max_ics=4, catalogue=load_ic_catalogue())
 
 
 @st.cache_data
@@ -157,7 +172,7 @@ with st.sidebar:
     st.title("🔧 PCB Repair Assistant")
     st.caption("Hands-free job cards for the repair bench")
     st.markdown("**What the app demonstrates**")
-    st.markdown(badge("AI", "OCR (Tesseract)") + "<br><small>Reads board label from a photo</small>",
+    st.markdown(badge("AI", "OCR (Tesseract)") + "<br><small>Reads the board label and chip markings</small>",
                 unsafe_allow_html=True)
     if VOICE_ENABLED:
         st.markdown(badge("AI", "Speech-to-text (Whisper)") + "<br><small>Turns the voice note into text</small>",
@@ -243,6 +258,38 @@ with bench:
                                 unsafe_allow_html=True)
                 if not parts:
                     st.caption("No components above the confidence threshold.")
+
+            # ---------- Step 1c: chip markings (OCR on each detected IC)
+            st.markdown("#### Chip markings")
+            st.markdown(badge("AI", "OCR reads the part number on each large IC, then looks it up "
+                                    "in the parts catalogue"), unsafe_allow_html=True)
+            if st.toggle("Read IC markings", value=True, key="read_ics",
+                         help="Crops the 4 largest detected ICs, tries all four rotations and three "
+                              "image clean-ups, and matches the text against data/ic_catalogue.csv."):
+                with st.spinner("Reading chip markings (a few seconds per chip)..."):
+                    chips = read_chip_markings(image_key(img) + str(tiled), img, parts)
+                st.session_state.chips = chips
+                if not chips:
+                    st.caption("No ICs large enough to read (needs about 60 px or more in the photo).")
+                cols = st.columns(4)
+                for col, chip in zip(cols, chips):
+                    with col:
+                        x1, y1, x2, y2 = (round(v) for v in chip["box"])
+                        st.image(img.convert("RGB").crop((x1, y1, x2, y2)), width="stretch")
+                        if chip["match"]:
+                            m = chip["match"]
+                            st.markdown(f"**{m['key']}**  \n{m['manufacturer']}  \n"
+                                        f"<small>{m['description']}</small>", unsafe_allow_html=True)
+                        elif chip["part"]:
+                            st.markdown(f"**{chip['part']}**  \n<small>not in catalogue</small>",
+                                        unsafe_allow_html=True)
+                        else:
+                            st.markdown("<small>marking not readable</small>", unsafe_allow_html=True)
+                        with st.expander("OCR text"):
+                            st.text(chip["text"].strip() or "(nothing read)")
+                            st.caption(f"rotation {chip['rotation']}°")
+            else:
+                st.session_state.chips = []
 
     # ---------- Step 2: board history lookup
     st.markdown("### 2 · Board history")
@@ -337,6 +384,7 @@ with bench:
                 "est_hours": round(hours, 1),
                 "parts": "; ".join(f"{k} x{v}" for k, v in
                                    pd.Series([p["name"] for p in parts], dtype=str).value_counts().items()),
+                "ics": "; ".join(c["match"]["key"] for c in st.session_state.get("chips", []) if c["match"]),
             })
             st.success(f"Saved job card for S/N {serial}. See the Repair Log tab.")
     elif board is None:
@@ -469,6 +517,35 @@ with evaluation:
     }), hide_index=True, width="stretch")
     st.caption("The one miss is a yellow tag on a yellow motherboard: the tag blends into the board. "
                "Measured by tests/test_ocr.py.")
+
+    ice = MODELS / "ic_ocr_eval.json"
+    if ice.exists():
+        st.divider()
+        st.markdown("## AI model · OCR on chip markings")
+        ev = json.loads(ice.read_text())
+        p, b = ev["pipeline"], ev["baseline_plain_tesseract"]
+        st.markdown(f"Part numbers on the largest detected ICs of the 50 demo boards "
+                    f"({p['readable_chips'] + p['other_crops']} chip crops, read by eye as ground truth). "
+                    f"{p['readable_chips']} carry a marking a person can read; the other {p['other_crops']} are "
+                    "covered by stickers or heatsinks, unmarked, too small, or not a chip at all "
+                    "(detector false positives).")
+        n = p["readable_chips"]
+        st.dataframe(pd.DataFrame({
+            "Pipeline": ["Plain Tesseract on the chip crop",
+                         "Upscale + contrast + 4 rotations × 3 clean-ups + catalogue match"],
+            "Readable chips identified": [f"{b['part_identified']} / {n} ({b['part_identified'] / n:.0%})",
+                                          f"{p['part_identified']} / {n} ({p['part_identified'] / n:.0%})"],
+            "Wrong part named": [b["wrong_part_on_readable"], p["wrong_part_on_readable"]],
+            "Part claimed on unreadable / non-chip crops":
+                [f"{b['false_identifications']} / {b['other_crops']}",
+                 f"{p['false_identifications']} / {p['other_crops']}"],
+            "Seconds per chip": [b["seconds_per_chip"], p["seconds_per_chip"]],
+        }), hide_index=True, width="stretch")
+        st.caption("Chip markings are tiny, low-contrast laser etching, often rotated. The catalogue "
+                   "(data/ic_catalogue.csv) is a local parts list like a repair shop keeps; it includes the "
+                   "parts on these boards, so this measures reading and matching, not discovering unknown "
+                   "parts. Fuzzy matching tolerates OCR look-alikes (S/5, O/0, B/8) but stays within one "
+                   "printed line. Measured by tools/eval_ic_ocr.py.")
 
 # ================================================================ LOG
 with logtab:

@@ -1,0 +1,1079 @@
+{
+ "note": "IC crops from the part detector on the 50 demo boards (two largest ICs per board, short side >= 60 px). Markings read by eye. readable = a person can read the part number; unreadable = sticker, heatsink, no marking or too small; not_ic = false detection.",
+ "items": [
+  {
+   "image": "board_1075.jpg",
+   "box": [
+    317,
+    722,
+    462,
+    864
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_1075.jpg",
+   "box": [
+    210,
+    77,
+    301,
+    192
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_1245.jpg",
+   "box": [
+    992,
+    263,
+    1190,
+    460
+   ],
+   "kind": "readable",
+   "expected": [
+    "VT8235"
+   ]
+  },
+  {
+   "image": "board_1245.jpg",
+   "box": [
+    69,
+    47,
+    186,
+    213
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_1487.jpg",
+   "box": [
+    387,
+    117,
+    752,
+    495
+   ],
+   "kind": "readable",
+   "expected": [
+    "MASCOT",
+    "CH1932"
+   ]
+  },
+  {
+   "image": "board_1487.jpg",
+   "box": [
+    1047,
+    298,
+    1309,
+    561
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_1492.jpg",
+   "box": [
+    495,
+    440,
+    653,
+    569
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_1492.jpg",
+   "box": [
+    1046,
+    788,
+    1241,
+    876
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_1584.jpg",
+   "box": [
+    293,
+    371,
+    467,
+    540
+   ],
+   "kind": "readable",
+   "expected": [
+    "82443BX"
+   ]
+  },
+  {
+   "image": "board_1584.jpg",
+   "box": [
+    1019,
+    166,
+    1151,
+    290
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_1686.jpg",
+   "box": [
+    592,
+    394,
+    765,
+    565
+   ],
+   "kind": "readable",
+   "expected": [
+    "XC7Z010"
+   ]
+  },
+  {
+   "image": "board_1686.jpg",
+   "box": [
+    498,
+    755,
+    650,
+    900
+   ],
+   "kind": "not_ic",
+   "expected": []
+  },
+  {
+   "image": "board_1975.jpg",
+   "box": [
+    931,
+    273,
+    1070,
+    414
+   ],
+   "kind": "readable",
+   "expected": [
+    "VT8233A"
+   ]
+  },
+  {
+   "image": "board_1975.jpg",
+   "box": [
+    1314,
+    43,
+    1400,
+    249
+   ],
+   "kind": "readable",
+   "expected": [
+    "39SF020"
+   ]
+  },
+  {
+   "image": "board_2034.jpg",
+   "box": [
+    233,
+    310,
+    399,
+    476
+   ],
+   "kind": "readable",
+   "expected": [
+    "82801"
+   ]
+  },
+  {
+   "image": "board_2034.jpg",
+   "box": [
+    81,
+    1094,
+    172,
+    1207
+   ],
+   "kind": "readable",
+   "expected": [
+    "LPC47M"
+   ]
+  },
+  {
+   "image": "board_2150.jpg",
+   "box": [
+    857,
+    149,
+    982,
+    484
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_2150.jpg",
+   "box": [
+    730,
+    897,
+    978,
+    1029
+   ],
+   "kind": "readable",
+   "expected": [
+    "27C256"
+   ]
+  },
+  {
+   "image": "board_2392.jpg",
+   "box": [
+    310,
+    569,
+    429,
+    757
+   ],
+   "kind": "readable",
+   "expected": [
+    "HY5DV641622"
+   ]
+  },
+  {
+   "image": "board_2392.jpg",
+   "box": [
+    544,
+    571,
+    659,
+    754
+   ],
+   "kind": "readable",
+   "expected": [
+    "HY5DV641622"
+   ]
+  },
+  {
+   "image": "board_2485.jpg",
+   "box": [
+    544,
+    467,
+    1002,
+    915
+   ],
+   "kind": "readable",
+   "expected": [
+    "XC7A100T"
+   ]
+  },
+  {
+   "image": "board_2485.jpg",
+   "box": [
+    1012,
+    610,
+    1173,
+    832
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_2542.jpg",
+   "box": [
+    624,
+    292,
+    861,
+    524
+   ],
+   "kind": "readable",
+   "expected": [
+    "XC7Z010"
+   ]
+  },
+  {
+   "image": "board_2542.jpg",
+   "box": [
+    356,
+    414,
+    561,
+    551
+   ],
+   "kind": "readable",
+   "expected": [
+    "D9PXV"
+   ]
+  },
+  {
+   "image": "board_2768.jpg",
+   "box": [
+    237,
+    556,
+    450,
+    779
+   ],
+   "kind": "readable",
+   "expected": [
+    "GM1601"
+   ]
+  },
+  {
+   "image": "board_2768.jpg",
+   "box": [
+    456,
+    876,
+    570,
+    1005
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_3323.jpg",
+   "box": [
+    537,
+    328,
+    655,
+    472
+   ],
+   "kind": "readable",
+   "expected": [
+    "ADUM2400"
+   ]
+  },
+  {
+   "image": "board_3323.jpg",
+   "box": [
+    518,
+    524,
+    633,
+    668
+   ],
+   "kind": "readable",
+   "expected": [
+    "ADUM2401"
+   ]
+  },
+  {
+   "image": "board_3580.jpg",
+   "box": [
+    1090,
+    696,
+    1197,
+    763
+   ],
+   "kind": "not_ic",
+   "expected": []
+  },
+  {
+   "image": "board_4025.jpg",
+   "box": [
+    455,
+    467,
+    625,
+    640
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_4025.jpg",
+   "box": [
+    586,
+    454,
+    662,
+    517
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_4050.jpg",
+   "box": [
+    865,
+    697,
+    954,
+    787
+   ],
+   "kind": "not_ic",
+   "expected": []
+  },
+  {
+   "image": "board_4050.jpg",
+   "box": [
+    566,
+    696,
+    654,
+    784
+   ],
+   "kind": "not_ic",
+   "expected": []
+  },
+  {
+   "image": "board_4116.jpg",
+   "box": [
+    955,
+    148,
+    1102,
+    294
+   ],
+   "kind": "readable",
+   "expected": [
+    "80C535"
+   ]
+  },
+  {
+   "image": "board_4116.jpg",
+   "box": [
+    729,
+    69,
+    919,
+    168
+   ],
+   "kind": "readable",
+   "expected": [
+    "27C256"
+   ]
+  },
+  {
+   "image": "board_4200.jpg",
+   "box": [
+    37,
+    151,
+    152,
+    508
+   ],
+   "kind": "not_ic",
+   "expected": []
+  },
+  {
+   "image": "board_4200.jpg",
+   "box": [
+    735,
+    529,
+    921,
+    717
+   ],
+   "kind": "readable",
+   "expected": [
+    "SDA6001"
+   ]
+  },
+  {
+   "image": "board_4762.jpg",
+   "box": [
+    872,
+    96,
+    1022,
+    249
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_4762.jpg",
+   "box": [
+    1191,
+    468,
+    1306,
+    583
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_4828.jpg",
+   "box": [
+    853,
+    325,
+    997,
+    644
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_4828.jpg",
+   "box": [
+    268,
+    273,
+    447,
+    448
+   ],
+   "kind": "readable",
+   "expected": [
+    "MDIN150"
+   ]
+  },
+  {
+   "image": "board_4963.jpg",
+   "box": [
+    320,
+    133,
+    493,
+    313
+   ],
+   "kind": "readable",
+   "expected": [
+    "82801"
+   ]
+  },
+  {
+   "image": "board_4963.jpg",
+   "box": [
+    1190,
+    283,
+    1292,
+    381
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_5161.jpg",
+   "box": [
+    221,
+    672,
+    656,
+    958
+   ],
+   "kind": "not_ic",
+   "expected": []
+  },
+  {
+   "image": "board_5161.jpg",
+   "box": [
+    957,
+    634,
+    1359,
+    925
+   ],
+   "kind": "not_ic",
+   "expected": []
+  },
+  {
+   "image": "board_5557.jpg",
+   "box": [
+    527,
+    438,
+    719,
+    617
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_5557.jpg",
+   "box": [
+    941,
+    139,
+    1077,
+    279
+   ],
+   "kind": "readable",
+   "expected": [
+    "963L"
+   ]
+  },
+  {
+   "image": "board_5735.jpg",
+   "box": [
+    200,
+    467,
+    321,
+    586
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_5735.jpg",
+   "box": [
+    1036,
+    396,
+    1128,
+    467
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_5819.jpg",
+   "box": [
+    420,
+    700,
+    793,
+    1020
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_5819.jpg",
+   "box": [
+    974,
+    668,
+    1205,
+    901
+   ],
+   "kind": "readable",
+   "expected": [
+    "MB91305"
+   ]
+  },
+  {
+   "image": "board_5970.jpg",
+   "box": [
+    165,
+    658,
+    297,
+    832
+   ],
+   "kind": "not_ic",
+   "expected": []
+  },
+  {
+   "image": "board_5970.jpg",
+   "box": [
+    813,
+    663,
+    948,
+    829
+   ],
+   "kind": "not_ic",
+   "expected": []
+  },
+  {
+   "image": "board_6165.jpg",
+   "box": [
+    466,
+    291,
+    628,
+    455
+   ],
+   "kind": "readable",
+   "expected": [
+    "SPHE1003"
+   ]
+  },
+  {
+   "image": "board_6165.jpg",
+   "box": [
+    944,
+    377,
+    1078,
+    480
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_6345.jpg",
+   "box": [
+    995,
+    32,
+    1259,
+    122
+   ],
+   "kind": "not_ic",
+   "expected": []
+  },
+  {
+   "image": "board_6345.jpg",
+   "box": [
+    89,
+    618,
+    163,
+    743
+   ],
+   "kind": "not_ic",
+   "expected": []
+  },
+  {
+   "image": "board_7490.jpg",
+   "box": [
+    81,
+    841,
+    147,
+    956
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_7490.jpg",
+   "box": [
+    218,
+    833,
+    284,
+    946
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_7560.jpg",
+   "box": [
+    249,
+    143,
+    404,
+    303
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_7560.jpg",
+   "box": [
+    1100,
+    398,
+    1235,
+    505
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_7664.jpg",
+   "box": [
+    137,
+    72,
+    239,
+    209
+   ],
+   "kind": "not_ic",
+   "expected": []
+  },
+  {
+   "image": "board_8217.jpg",
+   "box": [
+    732,
+    129,
+    926,
+    321
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_8217.jpg",
+   "box": [
+    311,
+    342,
+    416,
+    475
+   ],
+   "kind": "not_ic",
+   "expected": []
+  },
+  {
+   "image": "board_8316.jpg",
+   "box": [
+    694,
+    102,
+    836,
+    257
+   ],
+   "kind": "readable",
+   "expected": [
+    "KS245"
+   ]
+  },
+  {
+   "image": "board_8316.jpg",
+   "box": [
+    695,
+    618,
+    837,
+    772
+   ],
+   "kind": "readable",
+   "expected": [
+    "KS245"
+   ]
+  },
+  {
+   "image": "board_8402.jpg",
+   "box": [
+    773,
+    795,
+    861,
+    869
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_8411.jpg",
+   "box": [
+    883,
+    339,
+    1277,
+    753
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_8411.jpg",
+   "box": [
+    0,
+    267,
+    415,
+    597
+   ],
+   "kind": "not_ic",
+   "expected": []
+  },
+  {
+   "image": "board_8421.jpg",
+   "box": [
+    734,
+    73,
+    892,
+    232
+   ],
+   "kind": "readable",
+   "expected": [
+    "AD9882"
+   ]
+  },
+  {
+   "image": "board_8421.jpg",
+   "box": [
+    1095,
+    80,
+    1205,
+    243
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_8492.jpg",
+   "box": [
+    232,
+    174,
+    391,
+    340
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_8492.jpg",
+   "box": [
+    1151,
+    235,
+    1256,
+    368
+   ],
+   "kind": "readable",
+   "expected": [
+    "RTL8110"
+   ]
+  },
+  {
+   "image": "board_8601.jpg",
+   "box": [
+    816,
+    176,
+    1005,
+    365
+   ],
+   "kind": "readable",
+   "expected": [
+    "82437FX"
+   ]
+  },
+  {
+   "image": "board_8601.jpg",
+   "box": [
+    698,
+    558,
+    885,
+    744
+   ],
+   "kind": "readable",
+   "expected": [
+    "82371FB"
+   ]
+  },
+  {
+   "image": "board_8629.jpg",
+   "box": [
+    661,
+    380,
+    813,
+    533
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_8629.jpg",
+   "box": [
+    358,
+    516,
+    432,
+    577
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_8794.jpg",
+   "box": [
+    378,
+    116,
+    533,
+    283
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_8794.jpg",
+   "box": [
+    957,
+    77,
+    1074,
+    170
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_9188.jpg",
+   "box": [
+    695,
+    328,
+    913,
+    550
+   ],
+   "kind": "readable",
+   "expected": [
+    "MN2WS0025"
+   ]
+  },
+  {
+   "image": "board_9188.jpg",
+   "box": [
+    1045,
+    670,
+    1186,
+    854
+   ],
+   "kind": "readable",
+   "expected": [
+    "LH28F640"
+   ]
+  },
+  {
+   "image": "board_9320.jpg",
+   "box": [
+    344,
+    232,
+    460,
+    344
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_9320.jpg",
+   "box": [
+    923,
+    437,
+    1015,
+    571
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_9387.jpg",
+   "box": [
+    828,
+    216,
+    1171,
+    569
+   ],
+   "kind": "readable",
+   "expected": [
+    "5CEBA4F23"
+   ]
+  },
+  {
+   "image": "board_9387.jpg",
+   "box": [
+    392,
+    433,
+    595,
+    634
+   ],
+   "kind": "readable",
+   "expected": [
+    "FT2232HL"
+   ]
+  },
+  {
+   "image": "board_9403.jpg",
+   "box": [
+    225,
+    791,
+    361,
+    925
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_9505.jpg",
+   "box": [
+    1059,
+    484,
+    1279,
+    581
+   ],
+   "kind": "not_ic",
+   "expected": []
+  },
+  {
+   "image": "board_9656.jpg",
+   "box": [
+    364,
+    311,
+    531,
+    479
+   ],
+   "kind": "readable",
+   "expected": [
+    "82443BX"
+   ]
+  },
+  {
+   "image": "board_9656.jpg",
+   "box": [
+    999,
+    69,
+    1117,
+    183
+   ],
+   "kind": "unreadable",
+   "expected": []
+  },
+  {
+   "image": "board_9825.jpg",
+   "box": [
+    602,
+    693,
+    824,
+    780
+   ],
+   "kind": "not_ic",
+   "expected": []
+  },
+  {
+   "image": "board_9825.jpg",
+   "box": [
+    929,
+    146,
+    1040,
+    255
+   ],
+   "kind": "unreadable",
+   "expected": []
+  }
+ ]
+}

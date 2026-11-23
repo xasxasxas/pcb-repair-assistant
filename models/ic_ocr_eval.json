@@ -1,0 +1,1990 @@
+{
+ "pipeline": {
+  "readable_chips": 36,
+  "marking_read": 13,
+  "part_identified": 24,
+  "wrong_part_on_readable": 0,
+  "other_crops": 55,
+  "false_identifications": 0,
+  "seconds_per_chip": 2.32,
+  "details": [
+   {
+    "image": "board_1075.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "Ys \u2014\nee we\na\n/ \u2014 _) :\nEe [ end ;\nSeok orn eh one \u00a9 eS oe one SS Oe",
+    "match": null,
+    "rotation": 90,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_1075.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "PU POHE PS TERS FOR TEE EE he ete eb ee eee ehee\nWA\n\u201c034800 TAI TAl\n\u00ab GHALOOS46A\ne",
+    "match": null,
+    "rotation": 270,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_1245.jpg",
+    "kind": "readable",
+    "expected": [
+     "VT8235"
+    ],
+    "read": "g ecpie serein ga Pen =\nen| - Reese ws}\n2 ey |\ny\no> 0433CE TAIWAN ;\nc=. BBA60JOD11\u00a9 @ /\nOem ge ee emaen DBL *\n\u2018 = J {",
+    "match": null,
+    "rotation": 270,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_1245.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "\u2018 a\n\u2018. \u00b0 +\nFans \u2014\nie ;\n= =\n_-\n\u2014 -\n= =\n- y =\n= (aoe \u2014\n> ~ ol ' a\n= Dae a \u2018So:\n\u2014 ~ ms Oy \u2014\n= ' & wr ~\u2014\n= . 2 ft \u2014\n\u2014 oO \u201c5 ",
+    "match": null,
+    "rotation": 0,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_1487.jpg",
+    "kind": "readable",
+    "expected": [
+     "MASCOT",
+     "CH1932"
+    ],
+    "read": "Gi Qe Giana Tee\n=\nA, 5\nMRT Ei\nMASCOT VZ :\nCH1932.00 EI\n. 0247 zi\n\u00e9 Zi\nSF EUTHTTETUMTIR",
+    "match": "MASCOT",
+    "rotation": 180,
+    "marking_read": true,
+    "identified": true
+   },
+   {
+    "image": "board_1487.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "ee a ae! aS We.\n\"\n- : 2% hh .\n=\u2014_ e.- '\no> nn\n= ro\nse ~ ceo\na &\na Lees\n\u2014- a , 7\n| tex ~ os\n: us _\ni epee ere et ee eet e",
+    "match": null,
+    "rotation": 0,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_1492.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "Fame Veen, ee TO Are che a Oz La\na .__* . -\nBe entree oie Ae Sai bali a hed ys\nae ee fy ew Sil af ween Fa RAS ee\nanne pe",
+    "match": null,
+    "rotation": 0,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_1492.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "oF\n\u2014 = = os\ncool\nCe ae\nPnoerixh\n$ -\nC\u00e9ss i\n-\ntrae\nos Aer |\n*\nthe\noC *8 7489\n;\n#\nwr\n@Qunaneeunuenc te ee)",
+    "match": null,
+    "rotation": 180,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_1584.jpg",
+    "kind": "readable",
+    "expected": [
+     "82443BX"
+    ],
+    "read": "owe to, ae wees \u00ab \u00abnly 4 eww 4 = Se \u2014 a ee eee \u2014_\u2014~\neee)\niz - =\ni) n .. ee\n.\ni . e :\nv\n; bd\n|\ni a 2\nj '\n. Amr. \u00ab4 . ;\ni ",
+    "match": "82443BX",
+    "rotation": 270,
+    "marking_read": true,
+    "identified": true
+   },
+   {
+    "image": "board_1584.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "= vi |\nPe, a \\ \\ N \u2018\noo \\ \\ . ie ~\nmt ,\\ \\\\\\\niA\\ \\s\nLDN",
+    "match": null,
+    "rotation": 0,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_1686.jpg",
+    "kind": "readable",
+    "expected": [
+     "XC7Z010"
+    ],
+    "read": "LRA Se ee att eT ? of ae . 7\nJ Oe, See ; <b?\" yaw *\nOo Ae Et en pee te\nMoe tp fa toy of ted AOD Le Sy\n' hy \u2019 Q \u201d oe, \u201cJ ",
+    "match": null,
+    "rotation": 180,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_1686.jpg",
+    "kind": "not_ic",
+    "expected": [],
+    "read": "aPC\nqs\neit\n<\n\u00a2_.A\nvax\u00e9\n0 eee\nre",
+    "match": null,
+    "rotation": 90,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_1975.jpg",
+    "kind": "readable",
+    "expected": [
+     "VT8233A"
+    ],
+    "read": "_ VT8233A Ct\nO232CE TAIWAN \u201c |\n21A20180510@\n\u2018 w~ . em |",
+    "match": "VT8233A",
+    "rotation": 270,
+    "marking_read": true,
+    "identified": true
+   },
+   {
+    "image": "board_1975.jpg",
+    "kind": "readable",
+    "expected": [
+     "39SF020"
+    ],
+    "read": ",;=wreeseereaecseeagadanaad\u00aba\n3) 39SFO20A\na ST 70-4C-PH\niF MPF 0213030-A\nMet eeerenerrsere",
+    "match": "39SF020",
+    "rotation": 90,
+    "marking_read": false,
+    "identified": true
+   },
+   {
+    "image": "board_2034.jpg",
+    "kind": "readable",
+    "expected": [
+     "82801"
+    ],
+    "read": "wr bey\n\u201ce\n-\n*-*\n\u00a5\nv<\n7\n\u201c?\nlan\nAe\n~<\n>. *\na)\nyar\no.-\n+t\nuP\nar\n20\n@Zzow\nam <lWw\noaune\natu\n._+\n=\n\u2018oS\n> +\nMe tO) oe\n4\n7\n\u2018\n\u201c-",
+    "match": null,
+    "rotation": 270,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_2034.jpg",
+    "kind": "readable",
+    "expected": [
+     "LPC47M"
+    ],
+    "read": "AUOTENRDURLAORT EER DAVASPATRURAE ADOT ALE\noe *\n\u2014 LPC47M584-NC\nws B0421-AL 1314\n-8H117620\u20ac\npa caer nreorant ra",
+    "match": "LPC47M",
+    "rotation": 270,
+    "marking_read": true,
+    "identified": true
+   },
+   {
+    "image": "board_2150.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "\u2014\u2014 ee ee ee ee ee\n\u2014\u2014\u2014\u2014\n2222.58.22 5 8.88222 8 Ree\nRYT\n,\n305 0010-P\nY\nif\n28932-74AN\nSE ET ES ee a",
+    "match": null,
+    "rotation": 270,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_2150.jpg",
+    "kind": "readable",
+    "expected": [
+     "27C256"
+    ],
+    "read": "yi\nb\nat\n20270256\nct\nhi\nK9373932\n\u00a9 \u00a91864\nb\na\n\u2018i\nHi\n}!\n|\nfe\nat\ned |\not\nber\n|\nelf",
+    "match": "27C256",
+    "rotation": 270,
+    "marking_read": false,
+    "identified": true
+   },
+   {
+    "image": "board_2392.jpg",
+    "kind": "readable",
+    "expected": [
+     "HY5DV641622"
+    ],
+    "read": "- hynix 222K\n. HYSDVE41 622AT-\n- KOREA\n5",
+    "match": "HY5DV641622",
+    "rotation": 90,
+    "marking_read": false,
+    "identified": true
+   },
+   {
+    "image": "board_2392.jpg",
+    "kind": "readable",
+    "expected": [
+     "HY5DV641622"
+    ],
+    "read": "shh AAA,\nhymix 222A\n-HYS0V641622AT-4\nKOREA\n\u2019 \u2018 6F 72616!\nSEELDSSESLASSCLEL ICEL OPR AEs",
+    "match": "HY5DV641622",
+    "rotation": 90,
+    "marking_read": false,
+    "identified": true
+   },
+   {
+    "image": "board_2485.jpg",
+    "kind": "readable",
+    "expected": [
+     "XC7A100T"
+    ],
+    "read": "1\u00b0 \u2014 XILINXe\nXC7A100T \u2122\nFTG256ABX1449\nD5040414A\nTAIWAN\nTAH495. 00-00\n(",
+    "match": "XC7A100T",
+    "rotation": 0,
+    "marking_read": true,
+    "identified": true
+   },
+   {
+    "image": "board_2485.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "pee\ntite",
+    "match": null,
+    "rotation": 180,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_2542.jpg",
+    "kind": "readable",
+    "expected": [
+     "XC7Z010"
+    ],
+    "read": "\u00a9 XILINXe ,\nxe7Z010\u2122 |\nCLG4NDACK1345\nTAIWAN",
+    "match": "XC7Z010",
+    "rotation": 0,
+    "marking_read": false,
+    "identified": true
+   },
+   {
+    "image": "board_2542.jpg",
+    "kind": "readable",
+    "expected": [
+     "D9PXV"
+    ],
+    "read": "tS REI oe\n= a AXd60\nBY Liqvh 2",
+    "match": null,
+    "rotation": 0,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_2768.jpg",
+    "kind": "readable",
+    "expected": [
+     "GM1601"
+    ],
+    "read": "biNESI\ngm1601\n\"0510 AL\nTAIWAN T\n4 |",
+    "match": "GM1601",
+    "rotation": 0,
+    "marking_read": true,
+    "identified": true
+   },
+   {
+    "image": "board_2768.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "~\n~ .\nPMC Flash\n\u00bb PaTeTatatatatatat\n7.7. ss ss = FF",
+    "match": null,
+    "rotation": 270,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_3323.jpg",
+    "kind": "readable",
+    "expected": [
+     "ADUM2400"
+    ],
+    "read": ":\n:\n\u2018 a mri? :\n: Cia And :\nHUBGSS\n\u00bb =\u201d #\u00a3 tem Fs, - \u2019\n\u2014 SHOR SR fT\n:\n\u2014 |\nSS,",
+    "match": null,
+    "rotation": 0,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_3323.jpg",
+    "kind": "readable",
+    "expected": [
+     "ADUM2401"
+    ],
+    "read": "= |\n(| \u00abes |\narb ow 4 -\n' x ji + oO\nTs = == \u2122 CM\noo st oF\nara ~_ 7 ou av\n: ' \u2018rl ce\na {|\n\u2014\u2014 a\nari 4 i \u2014\"",
+    "match": null,
+    "rotation": 90,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_3580.jpg",
+    "kind": "not_ic",
+    "expected": [],
+    "read": "\u2014\nHL0G06 >\ndie\nfwALS\n\u2018Ou\nSLOPAL",
+    "match": null,
+    "rotation": 180,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_4025.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": ": pe ~~? -\n5 St \u201chy OS ty\nss Lipao *\nS Nye\nRSS Migs\nss \u201cLy, U\n\u2018\\ \u201cA ,\n\u201c9,\nwe %\nJ,** S *\nvs?\n, Y \u00b0, SS\n(im SS\n> Migs, yw\n",
+    "match": null,
+    "rotation": 180,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_4025.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "EY > SO\nEe \u00a9 ~y\nAM ?\npl, \u201c9 - a",
+    "match": null,
+    "rotation": 180,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_4050.jpg",
+    "kind": "not_ic",
+    "expected": [],
+    "read": "_ FF. -\n|\n:\n+\nA\n; \u2018\n* . \u2018\n: L ?, \u00bb \u201cwk J\n; . . .\n- a\n) \"Ths Se a\ntl . \u201c . eel \u201cme. 7\nm ~",
+    "match": null,
+    "rotation": 0,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_4050.jpg",
+    "kind": "not_ic",
+    "expected": [],
+    "read": "arse 4o\u2018,\u00a5\nhe. i= Wr r\n} , 43 .\n-* 4\nv : AG\n. \u2014\u2014 ,\ni . wk\n_ o_O a>, -\n=. 7 4",
+    "match": null,
+    "rotation": 270,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_4116.jpg",
+    "kind": "readable",
+    "expected": [
+     "80C535"
+    ],
+    "read": "* \u00b0\n: :\nad r\n~\u00ae ~\n: !\n-\u00ae 7\n= \u2014 SIEMEKS\nm\u2122 SAB 80C535-16-K 3S\n- he?\nSINGAPORE :\nTon _ CA \u00a9INTEL\u2019E0\n\u2014_? -\nad - \u201d\n-\u2014?\nvs + ",
+    "match": "80C535",
+    "rotation": 0,
+    "marking_read": true,
+    "identified": true
+   },
+   {
+    "image": "board_4116.jpg",
+    "kind": "readable",
+    "expected": [
+     "27C256"
+    ],
+    "read": "3\n3\n\\\"\nWw\n\u201d\na\n(3 NM27C2560120 \u00b0\n\u201c",
+    "match": "27C256",
+    "rotation": 90,
+    "marking_read": true,
+    "identified": true
+   },
+   {
+    "image": "board_4200.jpg",
+    "kind": "not_ic",
+    "expected": [],
+    "read": "- a lle lll ae -\nDE ELL \u00bb \u2019 : :\n\u00a2 \u2018 t% |\ney - BS ie \u201c, 44 y4 4 I*% . . 4\n7 ee a ee ee ~\u2014, ee ae ated oh ,\npies t : : 4 [",
+    "match": null,
+    "rotation": 90,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_4200.jpg",
+    "kind": "readable",
+    "expected": [
+     "SDA6001"
+    ],
+    "read": "| SOA,6001 B12> By\nBS 3404 :-14\u00b09R Xe\nFa? :4:27705 /000. z\nPTT ee TU EE EE ag",
+    "match": "SDA6001",
+    "rotation": 270,
+    "marking_read": false,
+    "identified": true
+   },
+   {
+    "image": "board_4762.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "*-\n\u201c+\n*s\n~*\n*)\n7?\niw)\n4\n\u2018*\nas\nAr\ni\nSo eh. b.\nere\na\nSe\n\u00bb*?*\n.*\n1\u00b0\net a. he\n\u201c7\n0008\nBSELS \u00a9\nJA-\nxz\n7%\na,\"\ni\n%\n\u00bb\n4\nYN\niW.\n*",
+    "match": null,
+    "rotation": 180,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_4762.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "7. + \u2018\nEST T902SCTU ~ >\nVOKBOSS.4* \u00b0 - |\n: 0706.\nNOOTEDZ > S\n\u201cWe SRS",
+    "match": null,
+    "rotation": 90,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_4828.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "VER. 2,2\n06.05.2005\na!\nns\nS268 6\nOf Bp)",
+    "match": null,
+    "rotation": 90,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_4828.jpg",
+    "kind": "readable",
+    "expected": [
+     "MDIN150"
+    ],
+    "read": "\u2014 ~~ F @\u00b0s @ \u00a9 @ \u20ac'S F 8 FF\n72 MDIN-150L &\nap. - OK26510-)\n: A042? :\n+ +... - ,\nal Re mm errr Perturr seeming ir",
+    "match": "MDIN150",
+    "rotation": 270,
+    "marking_read": true,
+    "identified": true
+   },
+   {
+    "image": "board_4963.jpg",
+    "kind": "readable",
+    "expected": [
+     "82801"
+    ],
+    "read": "ad -\nie @\nHh Lp\n4\nS8ON& 26\nSL\n7\n732\n\u2019\nNT TEL@O 02\nTALWAN\n~_",
+    "match": null,
+    "rotation": 180,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_4963.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "Re ee,\n| F\nZ\nE\n-\n+.\n:\n5 :\n:\n!\nwut <P = \u2014 ~\u20144\nweet _ Gees F .",
+    "match": null,
+    "rotation": 90,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_5161.jpg",
+    "kind": "not_ic",
+    "expected": [],
+    "read": "\u2014_\nee\nwe\n~ oe\nee\n\u00a9\n[\nt}))\n\u00bb\n\u2014\n|\nVv S>\nbaat\nof\nCt\nINOS403MH26\nS)\nYe\nBNA0\nO0096A\nUY ODIr 1g\n070511\nCAI\nas",
+    "match": null,
+    "rotation": 0,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_5161.jpg",
+    "kind": "not_ic",
+    "expected": [],
+    "read": "a copy dar, Ans EN \u2018 \u2014\nree: Sie, se |} SE ea,\npts bie ry ae\n; Tg \u00b0 f ioe, oh. P28: \u2014=\nsete re? > ~~ st wef al\nae Md Jf ?",
+    "match": null,
+    "rotation": 270,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_5557.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": ", @ we \\\nJ \u201c.\n. \\ \u2018\n. . . | : \u2018 y\n> Pte & ee ,",
+    "match": null,
+    "rotation": 270,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_5557.jpg",
+    "kind": "readable",
+    "expected": [
+     "963L"
+    ],
+    "read": "963LuA\n\u00a9@sIs'02\nPNO3237\nSgr\nsee",
+    "match": "963L",
+    "rotation": 270,
+    "marking_read": true,
+    "identified": true
+   },
+   {
+    "image": "board_5735.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "} Peed et lectt ee BMeal es pete fee innt\nle PT TE east Le\none se \u2014-\n\"35 \u2018Te\n-_- o _\u2014\nBu, : =\n\u2014\u20144 a.\n= . =\n.- =\n-- -_\n4 ",
+    "match": null,
+    "rotation": 180,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_5735.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "7 el Agee\nese \u2018ess\n= Vor 5904) Se\nSy U6 def =:\n<8) 90. We",
+    "match": null,
+    "rotation": 0,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_5819.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "ee\ne . o~2 \u201cy\n7 > s -~\nota\n\u2014_ \u2014\u2014\norn ees Ux -\nra wee ee \u2019\nus eS Le \u201cSh > : -\n\u201c ~ pier , ,\nan Maat OS ) ~\nherds Ss Sele \u00ab",
+    "match": null,
+    "rotation": 180,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_5819.jpg",
+    "kind": "readable",
+    "expected": [
+     "MB91305"
+    ],
+    "read": "s = JAPAN ;\n= MB91305\nB 0602 231",
+    "match": "MB91305",
+    "rotation": 0,
+    "marking_read": true,
+    "identified": true
+   },
+   {
+    "image": "board_5970.jpg",
+    "kind": "not_ic",
+    "expected": [],
+    "read": "Oem OO\n. _ -_ -_ \u00b0\nren\n= CI CVD =F\ner ee eee eee\nTerry",
+    "match": null,
+    "rotation": 180,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_5970.jpg",
+    "kind": "not_ic",
+    "expected": [],
+    "read": "ac mm\n2\u00a2\nsx 0 om \u00a2 2g\n=) Gm \u00a2\n=)\n_\u2014< \u2014_\nAle",
+    "match": null,
+    "rotation": 270,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_6165.jpg",
+    "kind": "readable",
+    "expected": [
+     "SPHE1003"
+    ],
+    "read": "pa \u2018a . +\naan *> -. a eat\ne haha nay &)\na \u00b0 , \u2014- ~\ns\u00e9 > . i. . + -\n+ *a/ ~*~ ~\n\u2019 ~\u00ab \u2019 .\nbe had \u00bb -\n. , \u201c+? 4\n: . ?..\n\u2014 i",
+    "match": null,
+    "rotation": 270,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_6165.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "+\n)\n~~\nSe en se a\n~~\ni \u2014_\nee itt \u201cer\n.",
+    "match": null,
+    "rotation": 0,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_6345.jpg",
+    "kind": "not_ic",
+    "expected": [],
+    "read": "0743.2\nMmmm",
+    "match": null,
+    "rotation": 0,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_6345.jpg",
+    "kind": "not_ic",
+    "expected": [],
+    "read": "4 250v\n47 ys\n| ry.\nPH be\n250\u00a5\nAT\n195\u00b0C",
+    "match": null,
+    "rotation": 180,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_7490.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "etpahad Te Tuer aeaeeette. \u201cve\nTx\nELPIDA Taman a\n025 16ALTA-SB-\u20ac\n03 1809076000",
+    "match": null,
+    "rotation": 90,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_7490.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "{ steatentatye tt peeeee..\nELPIDA TADAN |\nO75 1GLETA-GB-E \u2018\n08 1903076000\nOFS Ned hath \u2018 UT SRPRRREEES EEE ;",
+    "match": null,
+    "rotation": 90,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_7560.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "\u2014* sy At > anal\n.= - ; 2 ne? AP Om - \u201cee\n\u2018TOM ~ > Nate \u201c ~\n4 \u2014 7 - \u2014_ ae \u2014 \u201ce\no -\n! Feu Ge S .\nea \u00a9\ns j . Qe\n% Pll \u00b0.\n> ",
+    "match": null,
+    "rotation": 270,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_7560.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "Hitter \u2014\u2014\u2014\n;\n;\nVa\n03380\nT\n126063448\nmm |",
+    "match": null,
+    "rotation": 180,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_7664.jpg",
+    "kind": "not_ic",
+    "expected": [],
+    "read": "- -\u2014\u2014w- * t\u2014-\nos LLG At\n: \u00a2 7a \u00ab< *\n\u2018se Sen \u2014\n: Ete os : 25% 5 4\nsm, \u00a9 aa . eS\na he ~ \u00bb -\u2014\u2122\nMies can) 9 Re\n2. ; : ae >\no",
+    "match": null,
+    "rotation": 90,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_8217.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "fm\n~ .\n-\nce\n; YY\n; . - :",
+    "match": null,
+    "rotation": 90,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_8217.jpg",
+    "kind": "not_ic",
+    "expected": [],
+    "read": "\u2014. St : \u00bb)\n> ; , t\n=| \u00a5\n, 7 |\nE o .\n= ee hte\n+ a7 ae: a\nie eel ~~ le eee",
+    "match": null,
+    "rotation": 270,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_8316.jpg",
+    "kind": "readable",
+    "expected": [
+     "KS245"
+    ],
+    "read": "s\u00e9... ._ 3\n=\ni \u2014\n< \u2014\n-\u2014\n\u2014_\na \u2014_\u2014\n\u2014\n_\u2014\n\u2018i \u2014\n-\u2014\nae eS ee",
+    "match": null,
+    "rotation": 90,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_8316.jpg",
+    "kind": "readable",
+    "expected": [
+     "KS245"
+    ],
+    "read": "eee \u2014_\na ~~ = :\n\u2014\u2014\u2014 |. C\u2014O\n\u2014. cw \u2014\u2014 |\na 27 \u00a9) \u2014)\n\u2014- ~~. o\u2014_\u2014\n\u2014- : ace\n\u2014 is \u2122 i\n\u2014 \u2014_~\n\u2014- \u2014",
+    "match": null,
+    "rotation": 270,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_8402.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "by My Ry Bed\n\u2018a ww ey",
+    "match": null,
+    "rotation": 270,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_8411.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "q>\na:\nvw, ete ale\naf,\nLg\n+f\na)\nee\nwe\ntf\nBet\n<\nVA x\na2\nLtt\nSS\n7 a\net\n~Ga\n@ .\nSS\nth S\ntel\no\nSe\nLF ef\ntet\nSES\nQS,\nae\n752\nph",
+    "match": null,
+    "rotation": 0,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_8411.jpg",
+    "kind": "not_ic",
+    "expected": [],
+    "read": "is",
+    "match": null,
+    "rotation": 180,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_8421.jpg",
+    "kind": "readable",
+    "expected": [
+     "AD9882"
+    ],
+    "read": "PS MniTTTINNTTNTITITTNITY = Op\n= =\n= ANALOG =\n= Caves |\n= AD9882 =|}\n= KSTZ-100 . =}\n= 1012078.1 =|",
+    "match": "AD9882",
+    "rotation": 180,
+    "marking_read": true,
+    "identified": true
+   },
+   {
+    "image": "board_8421.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "7*\n<*\n\u2014\u2014 Se pee >|\nll\na).\na)\n>",
+    "match": null,
+    "rotation": 90,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_8492.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "e - \u00bb 7\n> \u2018 P\nre om\n. , \u2018 :\n* ~ mo\ne Os >\n> ' _\n\" , . \u2019\n\u00bb* . 7\n2.9 - .\ne > bd *\n>\n\u2018s . -\n5\n~ yw Ff\n: -_\nr. \u00a5 oe - a",
+    "match": null,
+    "rotation": 270,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_8492.jpg",
+    "kind": "readable",
+    "expected": [
+     "RTL8110"
+    ],
+    "read": "cruErr\u201de Fane se eese eee\nwo \u2014\u2014 \u00ab , \u201cs 7\nHill /\n_* :\n>\n- _\u2014\n~ \u2014_ :\n\u2014_& > :\n>_>\nPd - :\n= RILSL10S-32\n\u2014\n-_\ni\n~\nt- :\n_\u2014\na\nt",
+    "match": null,
+    "rotation": 270,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_8601.jpg",
+    "kind": "readable",
+    "expected": [
+     "82437FX"
+    ],
+    "read": "4S): PCIset =:\n== _SBB2437FX =\n= - $ 2966 2 =\n= \u2018e-ES42Ko0K =\n4= Rory KOREA =",
+    "match": "82437FX",
+    "rotation": 0,
+    "marking_read": false,
+    "identified": true
+   },
+   {
+    "image": "board_8601.jpg",
+    "kind": "readable",
+    "expected": [
+     "82371FB"
+    ],
+    "read": "a ah Keble ida hh lla aah ne\n\u201cinte\nPCiset\nSB82371FB.*.\n70873518:\ng 92997\n4\nSeren ney Wyeete Dar movil, aOR AIRE SIE",
+    "match": "82371FB",
+    "rotation": 90,
+    "marking_read": true,
+    "identified": true
+   },
+   {
+    "image": "board_8629.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "(A LA AAAAASA SADA AASAAA AAAS,\nWL bb bebeeeesceeeeeeneteseeet /\nend\neel\n2\neal\nel\nas\nSed\nied\ned\ned\nied\ned\nied\nid\n~e\niid\n",
+    "match": null,
+    "rotation": 0,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_8629.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "[es\n|\nne\ncee",
+    "match": null,
+    "rotation": 180,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_8794.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "Seeeseeseesesreeesseesseeesereeeeresees + & ay\n=o--\none\no- \u00ab\npoo\u00ab\n=e.\nPeo \u00ab\n~s\u00ab\n-_<e-\n@e-\ntial\noo\u201c\n=\u2014-.\nere\n\u2014\nwee\n@e\u00ab\n>o",
+    "match": null,
+    "rotation": 90,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_8794.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "2. 29\nAS see aseesclisl\nDae eew.eent his\n- SOdge Ae? o%eoee\nP eee sie:\n> evoeevesuenns\na! 321s Be 2 Bee\neee 6 oO seeo 4\n",
+    "match": null,
+    "rotation": 90,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_9188.jpg",
+    "kind": "readable",
+    "expected": [
+     "MN2WS0025"
+    ],
+    "read": "ewe\n=\nf\n\u2018 ;\nPe%\nPanasonic\n~~ MN2WSO02SRE\n' :\nao",
+    "match": "MN2WS0025",
+    "rotation": 270,
+    "marking_read": false,
+    "identified": true
+   },
+   {
+    "image": "board_9188.jpg",
+    "kind": "readable",
+    "expected": [
+     "LH28F640"
+    ],
+    "read": "; = =\n\u2018 ROcont_E27F3 =\nss LH2SF6408FHE-PaLTo =\nSHARP =\nJAPAN 43/08 =,\n\u20147.S\u2014\u2014",
+    "match": "LH28F640",
+    "rotation": 90,
+    "marking_read": false,
+    "identified": true
+   },
+   {
+    "image": "board_9320.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "Fol oot ol ot vl ote\nSee ee ee",
+    "match": null,
+    "rotation": 90,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_9320.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "\u2014\u2014\u2014\u2014ooEeEeEeEOeaeeeeeeeeeereene e\u2014e\u2014eeeeS.:.Erme eee ae Oe lea aL LSS 2...",
+    "match": null,
+    "rotation": 90,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_9387.jpg",
+    "kind": "readable",
+    "expected": [
+     "5CEBA4F23"
+    ],
+    "read": "\u00b0\nADEA,\nCycione\u00ae, V\n5CEBA4R23C8N :\nF BABAU1387A\nTAIWAN\nNABAUZ03016 |\nXY BQSFARTOA @) BP\nee ee ers NT OD eee.",
+    "match": "5CEBA4F23",
+    "rotation": 0,
+    "marking_read": false,
+    "identified": true
+   },
+   {
+    "image": "board_9387.jpg",
+    "kind": "readable",
+    "expected": [
+     "FT2232HL"
+    ],
+    "read": "\\\\ S88 eseeeseeceses =\n\u00bb~ Ly ha\nb> sa\n1S me 6\na ov:\n_ oF aes\not ws}\n=> ae \u2018 a 7\n= bse . a\nDae \u2019) oO?\niz .. & Po a3\n> oo\n",
+    "match": null,
+    "rotation": 0,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_9403.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "Le Display\n\u201c142426uC -\nOJTLL-O048A\nays\u00e9. 1008\n\u2018\n'",
+    "match": null,
+    "rotation": 270,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_9505.jpg",
+    "kind": "not_ic",
+    "expected": [],
+    "read": "> = Sal rr - = a me |\n- \u00a5 .\n~ \u00ab . \u2018 7 eA. ..\n\u2019 . _* \u00bb\n- : : ~ - . . \"7\n\u201c %~\u00ab e's . eet N, 7\n7 Lo >",
+    "match": null,
+    "rotation": 0,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_9656.jpg",
+    "kind": "readable",
+    "expected": [
+     "82443BX"
+    ],
+    "read": "yp ee NSS es a a a pet a Sh ey\n{ | atl So mcm Wy ~~\n<4 AGPset 4 |\n\u201c9 FWS2443B8X% - . to |\n+1 ef 85aVA78 ot |\nhi INETEL@O",
+    "match": "82443BX",
+    "rotation": 270,
+    "marking_read": false,
+    "identified": true
+   },
+   {
+    "image": "board_9656.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "ees e SIs Bek tole = ewe ee eb\nait\nn 7 a\n. 2 * > a ty \u00ab > es\n2. ee \u201c ~ s\n\u00bb 2) SRDS awe\nLae -a ee eee we: \u201c8\nJ 2 -\" :\n~ 7",
+    "match": null,
+    "rotation": 270,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_9825.jpg",
+    "kind": "not_ic",
+    "expected": [],
+    "read": "7 _ wawr &\neee \"a a a Cy Sey . \u201d\nr| Sa On. 7, fh\nVl\n. is\n| J\na\n| a ee ees\ni 7 ae r, ry ru",
+    "match": null,
+    "rotation": 0,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_9825.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "Mi ; Tv \u2019\n.% * ~ ~ -*\n3a) . a \u2014\u2014 .\n< af > '\nip, area\n. < rs a -\n; re \u2019, ot *4.>-, E\not en te. ei :\nas \u201cea \u201cSs \u00abe. \u2018,! \u2019\n",
+    "match": null,
+    "rotation": 270,
+    "marking_read": false,
+    "identified": false
+   }
+  ]
+ },
+ "baseline_plain_tesseract": {
+  "readable_chips": 36,
+  "marking_read": 2,
+  "part_identified": 4,
+  "wrong_part_on_readable": 0,
+  "other_crops": 55,
+  "false_identifications": 0,
+  "seconds_per_chip": 0.13,
+  "details": [
+   {
+    "image": "board_1075.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "m ()))I\n7 naisit",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_1075.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_1245.jpg",
+    "kind": "readable",
+    "expected": [
+     "VT8235"
+    ],
+    "read": "",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_1245.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "Em =\nCMe terete",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_1487.jpg",
+    "kind": "readable",
+    "expected": [
+     "MASCOT",
+     "CH1932"
+    ],
+    "read": "tyzo\n: 00\u00b0 ZE6THO :\n= ZA LOISWW :\n4 LYN p\nea",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_1487.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "= zt\ni= |\nba SEL ELE ,",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_1492.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "bins hatter landcare\nee",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_1492.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_1584.jpg",
+    "kind": "readable",
+    "expected": [
+     "82443BX"
+    ],
+    "read": "",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_1584.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "\u00e9",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_1686.jpg",
+    "kind": "readable",
+    "expected": [
+     "XC7Z010"
+    ],
+    "read": "| \u00a2\n|",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_1686.jpg",
+    "kind": "not_ic",
+    "expected": [],
+    "read": "",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_1975.jpg",
+    "kind": "readable",
+    "expected": [
+     "VT8233A"
+    ],
+    "read": "",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_1975.jpg",
+    "kind": "readable",
+    "expected": [
+     "39SF020"
+    ],
+    "read": ") ae\ni\nat :\n4 83g |\nHE\nia :\nid ;",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_2034.jpg",
+    "kind": "readable",
+    "expected": [
+     "82801"
+    ],
+    "read": "",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_2034.jpg",
+    "kind": "readable",
+    "expected": [
+     "LPC47M"
+    ],
+    "read": "a",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_2150.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_2150.jpg",
+    "kind": "readable",
+    "expected": [
+     "27C256"
+    ],
+    "read": "ma ane as ar a\n850 i 4\n\n{ 580 MSBA\n\nSSeS",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_2392.jpg",
+    "kind": "readable",
+    "expected": [
+     "HY5DV641622"
+    ],
+    "read": "\"2\n: 2.\n55.2",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_2392.jpg",
+    "kind": "readable",
+    "expected": [
+     "HY5DV641622"
+    ],
+    "read": "\u2018n=\n33:\n. Be\nee\n22\nee",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_2485.jpg",
+    "kind": "readable",
+    "expected": [
+     "XC7A100T"
+    ],
+    "read": "7\u00b0 \u2014 XILINXe\n: XC7A100T \u2122\nFTG256ABX1449\nD5040414A\n1C\nTAIWAN\n: TAH495 . 00-00\nc",
+    "match": "XC7A100T",
+    "rotation": null,
+    "marking_read": true,
+    "identified": true
+   },
+   {
+    "image": "board_2485.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "&",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_2542.jpg",
+    "kind": "readable",
+    "expected": [
+     "XC7Z010"
+    ],
+    "read": "\u00a9 XILINXe\nxe7z010\u2122\nCLO40DACK1345\n040350084\nTAIWAN\nNeKees",
+    "match": "XC7Z010",
+    "rotation": null,
+    "marking_read": false,
+    "identified": true
+   },
+   {
+    "image": "board_2542.jpg",
+    "kind": "readable",
+    "expected": [
+     "D9PXV"
+    ],
+    "read": "",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_2768.jpg",
+    "kind": "readable",
+    "expected": [
+     "GM1601"
+    ],
+    "read": "AN",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_2768.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_3323.jpg",
+    "kind": "readable",
+    "expected": [
+     "ADUM2400"
+    ],
+    "read": "ATT TET Y\nLERRAAED",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_3323.jpg",
+    "kind": "readable",
+    "expected": [
+     "ADUM2401"
+    ],
+    "read": "aT z",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_3580.jpg",
+    "kind": "not_ic",
+    "expected": [],
+    "read": "",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_4025.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "OM | Anas oa",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_4025.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "ee ai\n% eZ",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_4050.jpg",
+    "kind": "not_ic",
+    "expected": [],
+    "read": "La",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_4050.jpg",
+    "kind": "not_ic",
+    "expected": [],
+    "read": "",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_4116.jpg",
+    "kind": "readable",
+    "expected": [
+     "80C535"
+    ],
+    "read": "\u00a9 acaccececcccees\n4 7\n2 soe E\npe Starts F",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_4116.jpg",
+    "kind": "readable",
+    "expected": [
+     "27C256"
+    ],
+    "read": "gk\n| 8 i\n6$446446645666",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_4200.jpg",
+    "kind": "not_ic",
+    "expected": [],
+    "read": "a. le\nrae\n#2 Ey\nOe",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_4200.jpg",
+    "kind": "readable",
+    "expected": [
+     "SDA6001"
+    ],
+    "read": "> ET",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_4762.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "nignonages *%\nVK Sores 000,\n243898.000\u00b0 27708\n\n_\u2014 ;",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_4762.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_4828.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": ", a\n=< i |\n: [\n= m\nao\nlager E\naw",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_4828.jpg",
+    "kind": "readable",
+    "expected": [
+     "MDIN150"
+    ],
+    "read": "| a |",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_4963.jpg",
+    "kind": "readable",
+    "expected": [
+     "82801"
+    ],
+    "read": "",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_4963.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_5161.jpg",
+    "kind": "not_ic",
+    "expected": [],
+    "read": "iG bes ai",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_5161.jpg",
+    "kind": "not_ic",
+    "expected": [],
+    "read": "Ee\n; i Ge Fi\n1G x: $ *",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_5557.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_5557.jpg",
+    "kind": "readable",
+    "expected": [
+     "963L"
+    ],
+    "read": "| ih",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_5735.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_5735.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "ge\n4 Soe, .s\nOFT",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_5819.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "fe)\nf q",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_5819.jpg",
+    "kind": "readable",
+    "expected": [
+     "MB91305"
+    ],
+    "read": "= JAPAN 3\n891305\n0602 731\n\n#1",
+    "match": "MB91305",
+    "rotation": null,
+    "marking_read": false,
+    "identified": true
+   },
+   {
+    "image": "board_5970.jpg",
+    "kind": "not_ic",
+    "expected": [],
+    "read": "street\nTTT",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_5970.jpg",
+    "kind": "not_ic",
+    "expected": [],
+    "read": "| Bale\nHoke",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_6165.jpg",
+    "kind": "readable",
+    "expected": [
+     "SPHE1003"
+    ],
+    "read": "0937 a",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_6165.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_6345.jpg",
+    "kind": "not_ic",
+    "expected": [],
+    "read": "i INVA t",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_6345.jpg",
+    "kind": "not_ic",
+    "expected": [],
+    "read": "m2.\naly (i\nAOSe\n\nR\n\nte i\nmly",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_7490.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_7490.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_7560.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "Fon ole\nyeaa Je A\nPE eR",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_7560.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "ee",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_7664.jpg",
+    "kind": "not_ic",
+    "expected": [],
+    "read": "",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_8217.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "3",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_8217.jpg",
+    "kind": "not_ic",
+    "expected": [],
+    "read": "b\u2014\u2014\u2014-\u2014--.4\n[oe",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_8316.jpg",
+    "kind": "readable",
+    "expected": [
+     "KS245"
+    ],
+    "read": "TAMMIE\nViiiiiiiiiit",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_8316.jpg",
+    "kind": "readable",
+    "expected": [
+     "KS245"
+    ],
+    "read": "1iiiiiiiil",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_8402.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "E",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_8411.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "A Fs a\njj \u00aboy & pei \u201cww C3\nC;\n\u2014 %G RA o\nORLY Sy ae\neS, RB\nfe S&S \u201cLy res\niS Lg A Ss\noo SS Lig, O-\n; e et key\nSo, \u201c\nFS, S",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_8411.jpg",
+    "kind": "not_ic",
+    "expected": [],
+    "read": "= AA\n-_) i\n\u2014 =",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_8421.jpg",
+    "kind": "readable",
+    "expected": [
+     "AD9882"
+    ],
+    "read": "LTTE HE\n= veut. =)\n= ne\n= ors =|\nBareenrerereereer 3",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_8421.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_8492.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "Ss\nSl\n\u00a5 y",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_8492.jpg",
+    "kind": "readable",
+    "expected": [
+     "RTL8110"
+    ],
+    "read": "Es",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_8601.jpg",
+    "kind": "readable",
+    "expected": [
+     "82437FX"
+    ],
+    "read": "| ecrset E\n2 Blithe E\noO ERE E\nee ae 3]\nJ Pose torn |",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_8601.jpg",
+    "kind": "readable",
+    "expected": [
+     "82371FB"
+    ],
+    "read": "aloes i\n70 E",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_8629.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "mB vanverenenenennnnnntinnnt\nSmI TTT",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_8629.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "D 3\noe)",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_8794.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "4 #\na Ligijigiligaijinlaiajipijiiili, ye",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_8794.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "Rene ELE eo\nPananite",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_9188.jpg",
+    "kind": "readable",
+    "expected": [
+     "MN2WS0025"
+    ],
+    "read": "",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_9188.jpg",
+    "kind": "readable",
+    "expected": [
+     "LH28F640"
+    ],
+    "read": "|\n\u00a3 ess\n2 gae\nMeritt ge",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_9320.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_9320.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "| |",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_9387.jpg",
+    "kind": "readable",
+    "expected": [
+     "5CEBA4F23"
+    ],
+    "read": "iQ\n\u00b0\nfe)\n(NUE.\nCycioneF, Vv\n5CEBA4F23C8N\nF BABAU1337A\nTAIWAN\nNABAU303016 |\n& BOLFAZTOA a\nS p",
+    "match": "5CEBA4F23",
+    "rotation": null,
+    "marking_read": true,
+    "identified": true
+   },
+   {
+    "image": "board_9387.jpg",
+    "kind": "readable",
+    "expected": [
+     "FT2232HL"
+    ],
+    "read": "gx HEH oe",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_9403.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "383\u00b0\nae",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_9505.jpg",
+    "kind": "not_ic",
+    "expected": [],
+    "read": "cam \u2014\u2014\u2014 1)",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_9656.jpg",
+    "kind": "readable",
+    "expected": [
+     "82443BX"
+    ],
+    "read": "ine",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_9656.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "| Pe:",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_9825.jpg",
+    "kind": "not_ic",
+    "expected": [],
+    "read": "",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   },
+   {
+    "image": "board_9825.jpg",
+    "kind": "unreadable",
+    "expected": [],
+    "read": "] ARERR 47",
+    "match": null,
+    "rotation": null,
+    "marking_read": false,
+    "identified": false
+   }
+  ]
+ }
+}
