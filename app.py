@@ -87,9 +87,14 @@ def _load_detector(model_version):
 
 
 def load_detector():
-    """Cached per model file, so a newly trained model is picked up without a restart."""
-    from detector_utils import MODEL
-    return _load_detector(MODEL.stat().st_mtime_ns if PartDetector.available() else 0)
+    """Cached per model file AND detector code, so a newly trained model or an
+    edited detector_utils.py is picked up without a restart (a cached object
+    built from old code would lack new methods)."""
+    import detector_utils
+    if not PartDetector.available():
+        return _load_detector(0)
+    code = Path(detector_utils.__file__).stat().st_mtime_ns
+    return _load_detector((detector_utils.MODEL.stat().st_mtime_ns, code, id(PartDetector)))
 
 
 def tile_zoom(detector):
