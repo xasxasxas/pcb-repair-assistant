@@ -4,7 +4,7 @@ PCB Repair Assistant - Streamlit app
 AI (deep learning)                       ML (classical, trained by us on repair records)
   1. OCR           - Tesseract              4. Fault classifier - TF-IDF + Logistic Regression
   2. Speech        - Whisper (archived)     5. Repair predictor - Random Forest
-  3. Part detector - YOLOv8n (fine-tuned by us on open PCB photos)
+  3. Part detector - YOLOv8s (fine-tuned by us on tiles of open PCB photos)
 
 Run locally:  streamlit run app.py
 
@@ -32,6 +32,10 @@ VOICE_ENABLED = os.environ.get("PCB_VOICE", "0") == "1"
 ROOT = Path(__file__).parent
 MODELS = ROOT / "models"
 SAMPLES = ROOT / "sample_images"
+try:
+    DETECTOR_NAME = json.loads((MODELS / "parts.json").read_text()).get("model", "YOLOv8")
+except (OSError, ValueError):
+    DETECTOR_NAME = "YOLOv8"
 
 BLUE = "#2a78d6"
 BLUE_RAMP = ["#cde2fb", "#86b6ef", "#3987e5", "#1c5cab", "#0d366b"]
@@ -177,7 +181,7 @@ with st.sidebar:
     if VOICE_ENABLED:
         st.markdown(badge("AI", "Speech-to-text (Whisper)") + "<br><small>Turns the voice note into text</small>",
                     unsafe_allow_html=True)
-    st.markdown(badge("AI", "Part detector (YOLOv8n)") + "<br><small>Finds and classifies components</small>",
+    st.markdown(badge("AI", f"Part detector ({DETECTOR_NAME})") + "<br><small>Finds and classifies components</small>",
                 unsafe_allow_html=True)
     st.markdown(badge("ML", "Fault classifier") + "<br><small>TF-IDF + Logistic Regression</small>",
                 unsafe_allow_html=True)
@@ -238,7 +242,7 @@ with bench:
     parts = []
     if img is not None:
         st.markdown("#### Components on the board")
-        st.markdown(badge("AI", "Part detector (YOLOv8n, fine-tuned on open PCB photos)"), unsafe_allow_html=True)
+        st.markdown(badge("AI", f"Part detector ({DETECTOR_NAME}, fine-tuned on open PCB photos)"), unsafe_allow_html=True)
         if detector is None:
             st.caption("Part detector model not installed (models/parts.onnx).")
         else:
@@ -469,8 +473,12 @@ with evaluation:
     pj = MODELS / "parts.json"
     if pj.exists():
         pm = json.loads(pj.read_text())
-        st.markdown("Object detection: YOLOv8n (COCO-pretrained) fine-tuned on real PCB photos, "
-                    f"input {pm['imgsz']} px. Scores below are on test boards never used in training.")
+        tiles = "tiling" in pm
+        st.markdown(f"Object detection: {DETECTOR_NAME} (COCO-pretrained) fine-tuned on real PCB photos"
+                    + (f", cut into {pm['tiling']['tile']} px tiles" if tiles else "")
+                    + f", input {pm['imgsz']} px. Scores below are on test boards never used in training"
+                    + (", measured per tile by the YOLO validator (whole-board scores are in the table "
+                       "further down)." if tiles else "."))
         q1, q2, q3, q4 = st.columns(4)
         q1.metric("mAP@50", f"{pm['metrics']['map50']:.2f}")
         q2.metric("mAP@50-95", f"{pm['metrics']['map50_95']:.2f}")
@@ -492,8 +500,10 @@ with evaluation:
             st.markdown("**Single pass vs tiled detection** "
                         f"({tv['test_boards']} unseen test boards, {tv['labelled_parts']:,} labelled parts, "
                         "full-resolution photos)")
-            rows = [{"Mode": "Single pass (whole photo → 1024 px)" if r["mode"] == "single"
-                     else f"Tiled, zoom ×{r['zoom']:g} + whole-photo pass",
+            rows = [{"Model": r.get("model", DETECTOR_NAME),
+                     "Mode": ("Single pass (whole photo → 1024 px)" if r["mode"] == "single"
+                              else f"Tiled, zoom ×{r['zoom']:g} + whole-photo pass")
+                             + ("  ← used in the app" if r.get("in_app") else ""),
                      "mAP@50 (5 common types)": r["map50_common"],
                      "AP@50 weighted by part count": r["ap50_part_weighted"],
                      "Capacitor AP": r["per_class_ap50"]["Capacitor"],
@@ -502,10 +512,12 @@ with evaluation:
                      "Parts found / board": r["parts_shown_per_board"],
                      "Seconds / board": r["seconds_per_board"]} for r in tv["results"]]
             st.dataframe(pd.DataFrame(rows), hide_index=True, width="stretch")
-            st.caption("Same model in every row; only how the photo is fed to it changes. Tiling keeps small "
-                       "parts at a usable pixel size, so recall on resistors and capacitors rises, at the cost "
-                       "of more passes and somewhat lower precision. Measured by detector/eval_tiling.py. "
-                       "Inductor and Switch (under 20 test parts each) are left out of the 5-type mean.")
+            st.caption("Same test boards and scoring script in every row. Tiling keeps small parts at a "
+                       "usable pixel size. The previous model was trained on whole photos, so tiling raised "
+                       "its recall but cost precision; retraining on tiles fixed that, and the retrained model "
+                       "is only meant to be run tiled (single pass is worse). Measured by "
+                       "detector/eval_tiling.py. Inductor and Switch (under 20 test parts each) are left out "
+                       "of the 5-type mean.")
     else:
         st.caption("Part detector not trained yet.")
 

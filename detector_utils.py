@@ -1,4 +1,4 @@
-"""AI part 3 - Part detector: YOLOv8n (fine-tuned on open PCB photos), run
+"""AI part 3 - Part detector: YOLOv8 (fine-tuned on open PCB photos), run
 with ONNX Runtime on CPU. Same pre/post-processing as the Android app."""
 import json
 from pathlib import Path

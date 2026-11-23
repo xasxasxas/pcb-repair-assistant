@@ -1,4 +1,4 @@
-"""Part detector (YOLOv8n ONNX): loads, decodes correctly, finds parts on unseen boards."""
+"""Part detector (YOLOv8 ONNX): loads, decodes correctly, finds parts on unseen boards."""
 import json
 
 import numpy as np
@@ -56,10 +56,10 @@ def test_model_files_match_between_web_and_android():
 def test_detector_quality_on_unseen_test_boards():
     meta = json.loads(META.read_text())
     m, per = meta["metrics"], meta["per_class_ap50"]
-    # Sanity floor, not a target: tiny SMD passives on dense boards are hard for a
-    # nano model, so check overall quality plus the large, distinctive parts.
-    assert m["map50"] >= 0.25, m
-    assert per["IC"] >= 0.45 and per["Connector"] >= 0.40, per
+    # Sanity floor, not a target (per-tile scores from the YOLO validator).
+    assert m["map50"] >= 0.40, m
+    assert per["IC"] >= 0.50 and per["Connector"] >= 0.45, per
+    assert per["Resistor"] >= 0.40 and per["Capacitor"] >= 0.35, per    # the tiles' whole point
 
 
 @pytest.mark.skipif(not trained(), reason="needs the fully trained detector")
@@ -102,7 +102,15 @@ def test_tiling_evaluation_recorded_improvement():
     if not path.exists():
         pytest.skip("tiling evaluation not run")
     res = json.loads(path.read_text())["results"]
-    single = next(r for r in res if r["mode"] == "single")
-    best = max((r for r in res if r["mode"] == "tiled"), key=lambda r: r["map50_common"])
-    assert best["map50_common"] > single["map50_common"]
-    assert best["recall@0.30"] > single["recall@0.30"]
+    for model in {r.get("model") for r in res}:          # tiling helps each model
+        rows = [r for r in res if r.get("model") == model]
+        single = next(r for r in rows if r["mode"] == "single")
+        best = max((r for r in rows if r["mode"] == "tiled"), key=lambda r: r["map50_common"])
+        assert best["map50_common"] > single["map50_common"], model
+        assert best["recall@0.30"] > single["recall@0.30"], model
+    used = [r for r in res if r.get("in_app")]
+    if used:                                             # the retrained model beats the previous best
+        assert len(used) == 1
+        assert used[0]["map50_common"] == max(r["map50_common"] for r in res)
+        meta = json.loads(META.read_text())
+        assert used[0]["zoom"] == meta["tiling"]["long_side"] / meta["imgsz"]   # what app.tile_zoom uses

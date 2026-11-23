@@ -17,7 +17,7 @@ It ships as two apps built on the same models:
 | Runs | Fully offline on a phone or tablet: no internet permission at all | In a browser, hosted free on Streamlit Community Cloud |
 | OCR | Google ML Kit text recognition (bundled model) | Tesseract |
 | Speech-to-text | Vosk small English model (bundled) | Whisper `base.en` (faster-whisper) |
-| Part detector | YOLOv8n ONNX via ONNX Runtime | same ONNX model |
+| Part detector | YOLOv8s ONNX via ONNX Runtime (single pass for now) | same ONNX model, tiled |
 | ML models | Exported weights, run in Java; unit-tested to match scikit-learn to 1e-6 | scikit-learn |
 | Install | Copy `PCB-Repair-Assistant.apk` to the tablet over USB | Open the link |
 
@@ -27,7 +27,7 @@ It ships as two apps built on the same models:
 |---|---|---|
 | **AI** (deep learning, pretrained) | **OCR** | Reads board family, revision and serial number from the asset tag |
 | **AI** (deep learning, pretrained) | **Speech-to-text** | Transcribes the technician's voice note |
-| **AI** (deep learning, **fine-tuned by us**) | **Object detection**: YOLOv8n | Finds and classifies components: IC, capacitor, resistor, connector, transistor/diode, inductor, switch |
+| **AI** (deep learning, **fine-tuned by us**) | **Object detection**: YOLOv8s | Finds and classifies components: IC, capacitor, resistor, connector, transistor/diode, inductor, switch |
 | **ML** (classical, **trained by us**) | **Text classification**: TF-IDF + Logistic Regression | Predicts the fault category from the note and shows which words drove the decision |
 | **ML** (classical, **trained by us**) | **Ensemble learning**: Random Forest classifier + regressor | Predicts Repairable vs BER (beyond economic repair) and estimated repair hours |
 
@@ -58,22 +58,23 @@ All scores are on held-out data.
 gives 72%). Repair-hours mean absolute error 0.43 h, against 1.24 h for guessing the average. Board age and
 fault type drive scrap decisions.
 
-**Part detector** (YOLOv8n, COCO-pretrained, fine-tuned for 138 epochs / 4.8 h on a 4-core CPU runner;
-scored on 22 test boards never used for training or model selection):
+**Part detector** (YOLOv8s, COCO-pretrained, fine-tuned on 785 tiles of the 137 training boards for 112 epochs
+/ 89 min on a free Kaggle T4 GPU; early stopping kept epoch 87). The web app runs it tiled: the photo is
+enlarged to 2,048 px on the long side, cut into overlapping 1,024 px tiles, plus one whole-photo pass.
 
-| | mAP@50 | mAP@50-95 | Precision | Recall |
-|---|---|---|---|---|
-| All 7 part types | **0.349** | 0.184 | 0.418 | 0.371 |
+Scored on the 22 test boards (4,709 labelled parts, full-resolution photos) with `detector/eval_tiling.py`:
 
-| IC | Switch | Connector | Resistor | Capacitor | Transistor/Diode | Inductor |
-|---|---|---|---|---|---|---|
-| 0.63 | 0.59 | 0.54 | 0.26 | 0.24 | 0.17 | 0.02 |
+| Model and mode | mAP@50 (5 common types) | Capacitor | Resistor | Recall @0.30 | Precision @0.30 | Parts / board | s / board |
+|---|---|---|---|---|---|---|---|
+| YOLOv8n (whole photos), single pass | 0.405 | 0.29 | 0.31 | 34% | 46% | 96 | 0.12 |
+| YOLOv8n (whole photos), tiled ×1.5 | 0.455 | 0.37 | 0.38 | 46% | 40% | 181 | 0.52 |
+| **YOLOv8s (tiles), tiled ×2 (current)** | **0.522** | **0.44** | **0.50** | **49%** | **51%** | 202 | 1.45 |
 
-Large, distinctive parts (ICs, switches, connectors) are detected well. Tiny SMD passives on dense boards are
-only a few pixels wide at 1024 px, and inductors have just 105 training examples, so those classes are weak.
-The best validation mAP@50 was 0.40 (epoch 118). One detection takes about 0.2 s on a laptop CPU.
-A first 4-hour run scored 0.286; most of that gap was an evaluation artefact. NMS hit its time limit and the
-300-box cap on dense boards, so detections were dropped. Both limits were raised for the final run.
+The tile-trained model is meant to be run tiled; fed a whole photo in one pass it scores 0.358, because it
+has never seen parts that small. Per-tile scores from the YOLO validator on the test tiles: mAP@50 0.473,
+IC 0.62, Switch 0.68, Connector 0.53, Resistor 0.52, Capacitor 0.45, Transistor/Diode 0.39, Inductor 0.12.
+Training notebook: `detector/kaggle_train_tiles.ipynb`. The previous nano model (0.349 on the YOLO
+validator, trained 4.8 h on a CPU runner) is in the git history.
 
 **OCR on the 50 demo photos:**
 

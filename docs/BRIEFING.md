@@ -1,6 +1,6 @@
 # PCB Repair Assistant: progress briefing
 
-MS Artificial Intelligence, course project · Progress update, 23 November 2026 · Final submission 30 November 2026
+MS Artificial Intelligence, course project · Progress update, 24 November 2026 · Final submission 30 November 2026
 
 ## The problem
 
@@ -29,7 +29,7 @@ I kept a strict line between the two in the app and in this report. "AI" here me
 |---|---|---|---|
 | AI (pretrained) | OCR with Tesseract (LSTM) | Reads the asset tag | 49 of 50 serials read, against 15 of 50 for raw OCR |
 | AI (pretrained) | OCR on chip markings + parts catalogue | Names the larger chips | 24 of 36 readable chips identified, against 4 of 36 for plain OCR |
-| AI (fine-tuned by me) | YOLOv8 object detection | Finds and classifies components (7 types) | mAP@50 0.35; ICs 0.63, connectors 0.54 |
+| AI (fine-tuned by me) | YOLOv8 object detection, retrained on tiles | Finds and classifies components (7 types) | mAP@50 0.52 on the 5 common types, up from 0.41; recall 49%, precision 51% |
 | ML (trained by me) | TF-IDF + Logistic Regression | Fault category from the note | 95% accuracy on 120 test notes |
 | ML (trained by me) | Random Forest classifier and regressor | BER risk and repair hours | BER ROC AUC 0.82; hours error 0.43 h against 1.24 h for guessing the average |
 
@@ -51,8 +51,6 @@ The weakest part of the system was the detector. It found ICs and connectors wel
 
 The fix is tiled (sliced) detection. The app enlarges the photo, cuts it into overlapping 1,024-pixel tiles, and runs the detector on each tile, so small parts keep their size. Boxes cut off by a tile edge are discarded, because the neighbouring tile sees that part whole. One extra pass over the whole photo catches large parts that no single tile contains, and non-maximum suppression merges the duplicates.
 
-![The same demo board with single-pass detection (97 parts) and tiled detection (160 parts)](tiling_before_after.jpg)
-
 I didn't want to claim an improvement from one nice-looking picture, so I scored both modes against the 4,709 hand-labelled components on the 22 test boards, using the full-resolution photos. The model is the same in every row.
 
 | Detection mode | mAP@50 (5 common part types) | Capacitor AP | Resistor AP | Recall | Precision | Parts found per board | Time per board |
@@ -62,11 +60,27 @@ I didn't want to claim an improvement from one nice-looking picture, so I scored
 
 Tiling finds almost twice as many parts and lifts recall from 34% to 46% without any retraining. The cost is about four times the computation (still well under a second) and a drop in precision. I expected the precision drop: the model was trained on shrunken photos, so enlarged parts look unfamiliar to it.
 
-Two details about the measurement. Inductors and switches have under 20 examples each in the test set, so a couple of boxes swing their score wildly; I report the mean over the five common types and list the rare ones separately. My evaluation script also scores slightly differently from the YOLO library's built-in validator, so the 0.405 here and the 0.35 in the table above aren't directly comparable. Within this table, though, the comparison is like for like.
+Two details about the measurement. Inductors and switches have under 20 examples each in the test set, so a couple of boxes swing their score wildly; I report the mean over the five common types and list the rare ones separately. My evaluation script also scores slightly differently from the YOLO library's built-in validator, so the numbers here aren't directly comparable with the library's own scores. Within this report, though, every detector number comes from the same script on the same 22 boards, so the comparisons are like for like.
 
-### Retraining on tiles (running now)
+### Retraining on tiles
 
-The natural next step is to retrain the detector on tiles, so it learns what parts look like at the enlarged size. I cut the 137 training boards into 785 tiles and am training a larger model (YOLOv8s, about three times the capacity of the original nano model) on a free Kaggle GPU. My own machine has no GPU, and the free CPU runners on GitHub would need days for this. The first attempts failed for practical reasons: the notebook's Internet was off, and later a pre-installed library on Kaggle clashed with the training code. Both are fixed, and the run takes about an hour and a half. I'll report its score on the same 22 test boards, measured with the same script, in the final submission.
+The precision drop told me what to do next: retrain the detector on tiles, so it learns what parts look like at the enlarged size. I cut the 137 training boards into 785 tiles of 1,024 pixels and trained a larger model (YOLOv8s, about three times the capacity of the original nano model) on a free Kaggle GPU. My own machine has no GPU, and the free CPU runners on GitHub would have needed days.
+
+Getting the run to finish took three attempts, none of them about the model. The notebook's Internet was off, so the training library never installed. Then a library that Kaggle pre-installs clashed with a training callback and crashed it after the first epoch. And the first completed run was lost because I trained in an interactive session, which deletes its files when the browser closes. The fixes were an offline install bundle, switching off the unused integrations, and downloading the weights before closing the session. The final run took 89 minutes. It stopped early at epoch 112 because the validation score hadn't improved for 25 epochs, and kept the best weights from epoch 87.
+
+I scored the new model with the same script, on the same 22 test boards, as the table above:
+
+| Model and mode | mAP@50 (5 common types) | Capacitor AP | Resistor AP | Recall | Precision | Parts found per board | Time per board |
+|---|---|---|---|---|---|---|---|
+| Old model, single pass | 0.405 | 0.29 | 0.31 | 34% | 46% | 96 | 0.12 s |
+| Old model, tiled | 0.455 | 0.37 | 0.38 | 46% | 40% | 181 | 0.52 s |
+| New model, tiled | 0.522 | 0.44 | 0.50 | 49% | 51% | 202 | 1.45 s |
+
+Retraining did what I hoped. Resistors went from 0.31 to 0.50 and capacitors from 0.29 to 0.44, and precision recovered from 40% to 51%, so the extra parts it finds are mostly real. I also tried three zoom levels: 2× is best, which is exactly the scale the tiles were cut at, so the app reads that setting from the model's own description instead of a hard-coded number.
+
+![The same demo board: previous model in one pass (97 parts) and the retrained model, tiled (203 parts)](tiling_before_after.jpg)
+
+There are two trade-offs. The bigger model is slower, about 1.5 seconds per board on my laptop, which is still fine for a bench tool. And because it has only ever seen enlarged parts, it does worse than the old model if you feed it the whole photo in one pass (0.36). That's why tiled detection is on by default. A side effect I didn't expect: it no longer boxes the yellow asset tag as a connector.
 
 ### Reading the part numbers on chips
 
@@ -96,7 +110,7 @@ One caveat belongs next to the result. The catalogue contains the chips that app
 ## Limitations I want to be upfront about
 
 - The repair records (600) and board histories are synthetic. I generated them from fault-specific phrase banks with a fixed random seed, so the ML models learn patterns I designed. That keeps confidential workshop data out of a university project, and the same pipeline retrains unchanged on real job records.
-- The detector still misses some of the smallest parts on dense boards. It also occasionally boxes the yellow asset tag as a "connector", which is a funny but understandable mistake.
+- The detector still finds only about half of the labelled parts. The misses are mostly the smallest resistors and capacitors on dense boards.
 - Rare part types (inductors, switches) have too few training and test examples to judge properly.
 - Chip reading only works on larger chips, and it costs a few seconds per chip.
 - The web demo takes typed notes only.
@@ -110,12 +124,12 @@ The board photos come from the Roboflow 100 "printed circuit board" dataset (CC 
 | When | What |
 |---|---|
 | Mon 23 Nov | Baseline, tiled detection and chip-marking OCR, and the web app deployed on Streamlit Community Cloud. Done. |
-| Tue 24 Nov | Install the retrained YOLOv8s detector and re-score it on the 22 test boards |
+| Tue 24 Nov | Retrained YOLOv8s detector installed and re-scored on the 22 test boards. Done. |
 | Wed 25 to Thu 26 Nov | Buffer for fixes; visual fault detection (a "golden board" anomaly model) only if time allows |
 | Fri 27 to Sun 29 Nov | Slides, demo rehearsal, final numbers in the report |
 
 ## What I'd say in the demo
 
-I'd open with board_8601: the tag is read, 273 components are boxed (195 with a single pass), and both Intel chipset chips are named. Next I'd toggle tiled detection off and on, so the class can watch the small parts disappear and come back. That board is 17 years old, and the Random Forest marks it BER whatever the note says, which shows how heavily age weighs. For the contrast I'd switch to board_1686, a two-year-old Zybo. With a short-circuit note it's Repairable at about 31% BER risk; with the salt-corrosion note it flips to BER at 71%. Then I'd open the Model Evaluation tab to show where each number in this briefing comes from.
+I'd open with board_8601: the tag is read, 282 components are boxed, and both Intel chipset chips are named. Next I'd toggle tiled detection off and on, so the class can watch the small parts disappear (194 left) and come back. That board is 17 years old, and the Random Forest marks it BER whatever the note says, which shows how heavily age weighs. For the contrast I'd switch to board_1686, a two-year-old Zybo. With a short-circuit note it's Repairable at about 31% BER risk; with the salt-corrosion note it flips to BER at 71%. Then I'd open the Model Evaluation tab to show where each number in this briefing comes from.
 
 The live demo is at https://pcb-repair-assistant-b7yfndd6wrb2vbxtzvpszz.streamlit.app/. The source code, tests and full work log are in the project repository (PROGRESS.md).

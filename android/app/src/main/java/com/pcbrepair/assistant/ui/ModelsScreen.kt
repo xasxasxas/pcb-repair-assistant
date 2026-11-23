@@ -45,7 +45,7 @@ fun ModelsScreen(vm: BenchViewModel, engine: Engine) {
             Text("Everything runs offline. The app has no internet permission.", fontWeight = FontWeight.SemiBold)
             KindBadge("AI", "OCR: ML Kit text recognition (bundled model)")
             KindBadge("AI", "Speech-to-text: Vosk small English model")
-            KindBadge("AI", "Part detector: YOLOv8n, fine-tuned by us on open PCB photos")
+            KindBadge("AI", "Part detector: YOLOv8s, fine-tuned by us on open PCB photos")
             KindBadge("ML", "Fault classifier: TF-IDF + Logistic Regression")
             KindBadge("ML", "Repair predictor: Random Forest classifier + regressor")
             Caption("AI = deep-learning models; ML = classical models we trained on ${m.get("n_records").asInt} synthetic repair records. The phone runs the exported model weights and is unit-tested to match the Python originals to 6 decimal places.")
@@ -142,7 +142,7 @@ private fun importance(o: JsonObject) {
 @Composable
 private fun PartsCard(p: JsonObject?) {
     StepCard(null, "Part detector") {
-        KindBadge("AI", "YOLOv8n object detection, fine-tuned on open PCB datasets")
+        KindBadge("AI", "YOLOv8s object detection, fine-tuned on open PCB datasets")
         if (p == null) { Caption("Detector not bundled in this build."); return@StepCard }
         val met = p.getAsJsonObject("metrics")
         if (met != null) Row(Modifier.fillMaxWidth()) {
