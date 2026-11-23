@@ -50,6 +50,7 @@ def main():
     ap.add_argument("--long-side", type=int, default=2048)
     ap.add_argument("--tile", type=int, default=1024)
     ap.add_argument("--overlap", type=float, default=0.25)
+    ap.add_argument("--zip", action="store_true", help="also write <out>.zip for Kaggle upload")
     args = ap.parse_args()
     random.seed(0)
 
@@ -129,6 +130,19 @@ def main():
                "source": "Roboflow 100 printed-circuit-board v4 (CC BY 4.0)"}
     (args.out / "summary.json").write_text(json.dumps(summary, indent=2))
     print(json.dumps(summary, indent=2))
+    if args.zip:
+        write_zip(args.out, args.out.with_suffix(".zip"))
+
+
+def write_zip(folder: Path, dest: Path):
+    """Zip for upload to Kaggle. Paths inside use '/' (Windows' Compress-Archive
+    writes '\\', which Kaggle rejects as a forbidden character)."""
+    import zipfile
+    with zipfile.ZipFile(dest, "w", zipfile.ZIP_STORED) as z:
+        for p in sorted(folder.rglob("*")):
+            if p.is_file():
+                z.write(p, p.relative_to(folder).as_posix())
+    print(f"wrote {dest}")
 
 
 if __name__ == "__main__":
