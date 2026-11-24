@@ -8,6 +8,10 @@
   (https://universe.roboflow.com/new-workspace-rzrja/pcb-2.0). Part of RF100 (https://rf100.org).
   **Changes made:** labels merged from 23 to 7 classes, non-component labels removed, images resized,
   augmented duplicates removed, and a synthetic asset tag added to the 50 demo photos.
+  47 of its 196 boards (named e.g. Zybo, Arty_Top, RPI3B_Top) and its label names come from the
+  **PCB WACV 2019 dataset**: C.-W. Kuo, J. Ashmore, D. Huggins, Z. Kira, "Data-Efficient Graph Embedding
+  Learning for PCB Component Detection", WACV 2019, https://arxiv.org/abs/1811.06994. Checked
+  against the original release; it adds no boards beyond those already in the Roboflow version.
 * **pcb-components detection, version 1** (fedoration),
   https://universe.roboflow.com/fedoration/pcb-components-detection/dataset/1. CC BY 4.0.
   Examined but not used (its labels are unnamed numbers).
