@@ -1,3 +1,0 @@
-# Optional: voice input (archived for the web demo). Enable with PCB_VOICE=1.
-# Also needs ffmpeg on the system (apt: ffmpeg; add it to packages.txt for Streamlit Cloud).
-faster-whisper

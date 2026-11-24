@@ -1,11 +1,11 @@
 # PCB Repair Assistant: progress
 
-MS course project. **Final submission: Monday 30 Nov 2026.** The class demo uses the Streamlit web app; the offline Android app (same models) follows later.
+MS course project. **Final submission: Monday 30 Nov 2026.** The class demo uses the Streamlit web app. The earlier offline Android app is kept on the `full-version` branch.
 
 - **Status:** Feature-complete. Track A (tiled detection, YOLOv8s retrain, chip OCR), per-decision explanations and the BOM are done and tested. Track B is dropped, and detector work is closed. Remaining: slides and rehearsal.
 - **Repo:** `xasxasxas/pcb-repair-assistant` (private). The work log is [at the bottom](#work-log).
 - **Live demo:** https://pcb-repair-assistant-b7yfndd6wrb2vbxtzvpszz.streamlit.app/
-- **Class briefing:** [docs/BRIEFING.md](docs/BRIEFING.md) · **Track A/B explained with pictures:** [docs/TRACKS_EXPLAINED.md](docs/TRACKS_EXPLAINED.md) · **Deploy steps:** [docs/DEPLOY.md](docs/DEPLOY.md)
+- **Class briefing:** [docs/BRIEFING.md](docs/BRIEFING.md) · **Track A/B explained with pictures:** [docs/TRACKS_EXPLAINED.md](docs/TRACKS_EXPLAINED.md)
 
 ---
 
@@ -115,6 +115,8 @@ Result (`tools/eval_ic_ocr.py` → `models/ic_ocr_eval.json`):
 
 ## Android readiness
 
+*(The Android app and its tests live on the `full-version` branch since the 24 Nov clean-up; file names below refer to that branch.)*
+
 - Every model ships as ONNX or JSON, which the phone runs directly.
 - Tiling reuses the same decode and NMS rule as `YoloDecoder.java`; the tiling loop itself still needs porting. Until then the phone runs the tile-trained model in a single pass, which scores below the old model (0.358 vs 0.405), so porting tiling is the first Android task.
 - The phone/Python parity tests stay in CI.
@@ -191,3 +193,16 @@ Result (`tools/eval_ic_ocr.py` → `models/ic_ocr_eval.json`):
 - Tests: `tests/test_explain_bom.py` (contributions add up, age effect has the right sign, BOM lines and totals, empty BOM), plus app tests for the BOM and the "Why" section. 57 pass, 2 skipped.
 - Checked in a local browser: BOM table and CSV button, RTL8110 line on board 1075, and both "Why" charts (sorted by size, full labels).
 - **Scope closed (user decision):** no further detector work. Track B dropped. Similar past jobs and note-to-photo designator linking are noted for later.
+- **Clean-up for presentation (user request).** The project is now three code files:
+  - `app.py`: the screens (642 → 415 lines).
+  - `pcb_ai.py`: tag OCR, part detector with tiling, chip OCR, BOM and prediction explanations (merged from `ocr_utils.py`, `detector_utils.py`, `ic_ocr.py`, `bom.py`, `explain_utils.py`).
+  - `train.py`: synthetic data, ML training, detector tiles, detector and chip-OCR evaluation (merged from `generate_data.py`, `train_models.py`, `detector/prepare_dataset.py`, `detector/prepare_tiles.py`, `detector/eval_tiling.py`, `tools/eval_ic_ocr.py`), one command per step.
+  - Plus `test_project.py` (28 checks, merged from 10 test files) and `train_detector_kaggle.ipynb`.
+- Removed from `main` and preserved on the pushed `full-version` branch: the Android app (89 files), voice input, the 403-file copy of the detector dataset, the old CPU training script, the demo-photo and figure scripts, and the Android and detector-training CI workflows.
+- Removed from the app as superfluous: camera input, voice input, the BOM and repair-log CSV downloads, the "Read IC markings" switch (chips are always read), the per-tile YOLO metric tiles and chart on the evaluation tab, and extra job-card columns.
+- Re-verified after the merge:
+  - `python train.py data` reproduces `repair_records.csv` byte for byte.
+  - `python train.py ml` reproduces every score in `metrics.json` (only the order of tied keywords differs between Windows and Linux, so the original model files are kept).
+  - `python train.py eval-detector` reproduces all four detector rows exactly (tiled ×2: 0.522, recall 0.486, precision 0.509).
+  - `python train.py eval-chips` gives 24/36 identified, 0 wrong, 0 false claims (baseline 4/36).
+  - `pytest test_project.py`: 28 pass. The app was also checked in a local browser.

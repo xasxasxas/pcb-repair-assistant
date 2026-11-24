@@ -18,6 +18,4 @@
 
 ## Models and libraries
 * YOLOv8 by Ultralytics (AGPL-3.0), used for training. The exported detector is used for this academic project.
-* Vosk speech recognition and the `vosk-model-small-en-us-0.15` model (Apache 2.0), https://alphacephei.com/vosk.
-* Google ML Kit Text Recognition (bundled model), under the ML Kit terms of service.
-* ONNX Runtime (MIT), scikit-learn (BSD-3), Tesseract OCR (Apache 2.0), Whisper / faster-whisper (MIT), Streamlit (Apache 2.0).
+* ONNX Runtime (MIT), scikit-learn (BSD-3), Tesseract OCR (Apache 2.0), Streamlit (Apache 2.0).

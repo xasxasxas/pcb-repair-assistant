@@ -60,7 +60,9 @@ For the six largest chips on a board, the app reads the printed marking and look
 
 ---
 
-## Track B: golden-board anomaly detection (proposed, not started)
+## Track B: golden-board anomaly detection (considered, then dropped)
+
+I decided not to build this. It needs many photos of each board design, and a repair shop sees thousands of designs with new ones arriving all the time. The idea is explained here because it shaped that decision.
 
 ### The idea
 
@@ -95,4 +97,4 @@ There's no training in the deep-learning sense: no labels and no backpropagation
 - One memory bank per board design. It can't inspect a design it has no good photos of, so it won't work on the Roboflow demo boards. In a real workshop you'd build one bank per product line.
 - Photos must be taken roughly the same way as the good ones (framing, lighting). VisA is shot under controlled conditions; a phone photo on a bench is messier.
 - It says *where* something is unusual, not *what* the fault is. That fits the app's flow: Track B flags the area, the technician looks, and the note and fault classifier take it from there.
-- Cost: a 1.9 GB dataset download, then about a day of work to build, score and add to the app. That fits in the Wed–Thu buffer.
+- Cost: a 1.9 GB dataset download, then about a day of work to build, score and add to the app.

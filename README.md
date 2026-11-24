@@ -1,202 +1,84 @@
 # PCB Repair Assistant
 
-> **Live demo:** https://pcb-repair-assistant-b7yfndd6wrb2vbxtzvpszz.streamlit.app/  
-> **Course progress briefing:** [docs/BRIEFING.md](docs/BRIEFING.md) · **Work log:** [PROGRESS.md](PROGRESS.md) · **Deploying the demo:** [docs/DEPLOY.md](docs/DEPLOY.md)
+MS Artificial Intelligence course project. A bench assistant for circuit-board repair: the technician photographs a faulty board and types one line about the fault, and the app fills in the job card.
 
-**Live web app:** https://pcb-repair-assistant.streamlit.app ·
-**Android APK:** [Releases → latest](https://github.com/zanderjames86/repair_assist/releases/tag/latest)
+**Live demo:** https://pcb-repair-assistant-b7yfndd6wrb2vbxtzvpszz.streamlit.app/
+**Class briefing:** [docs/BRIEFING.md](docs/BRIEFING.md) · **How the detector work is explained, with pictures:** [docs/TRACKS_EXPLAINED.md](docs/TRACKS_EXPLAINED.md) · **Work log:** [PROGRESS.md](PROGRESS.md)
 
-Hands-free job cards for the electronics repair bench. A technician photographs a faulty board,
-speaks a short note about the fault, and the assistant reads the board's asset tag, finds the
-components on the board, diagnoses the fault and recommends whether the board is worth repairing.
+## What it does
 
-It ships as two apps built on the same models:
+1. **Reads the asset tag** on the photo (board type, revision, serial number).
+2. **Looks up the board's history** (age, previous repairs) by serial number.
+3. **Finds the components** and counts them by type.
+4. **Reads the part number on the big chips** and names them from a parts catalogue.
+5. **Lists the parts** as a bill of materials.
+6. **Classifies the fault** from the technician's note, and shows which words drove the answer.
+7. **Recommends repair or scrap** (BER: beyond economic repair) with an estimated repair time, and shows how much each input pushed the answer.
+8. **Saves the job card** to a repair log.
 
-| | **Android app** (main tool) | **Web app** (Streamlit) |
-|---|---|---|
-| Runs | Fully offline on a phone or tablet: no internet permission at all | In a browser, hosted free on Streamlit Community Cloud |
-| OCR | Google ML Kit text recognition (bundled model) | Tesseract |
-| Speech-to-text | Vosk small English model (bundled) | Whisper `base.en` (faster-whisper) |
-| Part detector | YOLOv8s ONNX via ONNX Runtime (single pass for now) | same ONNX model, tiled |
-| ML models | Exported weights, run in Java; unit-tested to match scikit-learn to 1e-6 | scikit-learn |
-| Install | Copy `PCB-Repair-Assistant.apk` to the tablet over USB | Open the link |
+## The AI and ML parts
 
-## AI and ML techniques
+"AI" here means deep-learning models. "ML" means classical models designed, trained and evaluated in this project. Every score is measured on data the model never saw during training.
 
-| Type | Technique | What it does |
-|---|---|---|
-| **AI** (deep learning, pretrained) | **OCR** | Reads board family, revision and serial number from the asset tag |
-| **AI** (deep learning, pretrained) | **Speech-to-text** | Transcribes the technician's voice note |
-| **AI** (deep learning, **fine-tuned by us**) | **Object detection**: YOLOv8s | Finds and classifies components: IC, capacitor, resistor, connector, transistor/diode, inductor, switch |
-| **ML** (classical, **trained by us**) | **Text classification**: TF-IDF + Logistic Regression | Predicts the fault category from the note and shows which words drove the decision |
-| **ML** (classical, **trained by us**) | **Ensemble learning**: Random Forest classifier + regressor | Predicts Repairable vs BER (beyond economic repair) and estimated repair hours, and explains each prediction as per-input contributions (tree-path decomposition, exact) |
+| | Technique | What it does | Result |
+|---|---|---|---|
+| AI, pretrained | OCR (Tesseract) on the asset tag | Reads the serial number | 49 of 50 demo photos, against 15 of 50 for raw OCR |
+| AI, fine-tuned here | YOLOv8s object detector, run on tiles | Finds 7 types of component | mAP@50 0.52 on the 5 common types; recall 49%, precision 51% |
+| AI, pretrained | OCR on chip markings + parts catalogue | Names the larger chips | 24 of 36 readable chips, against 4 of 36 for plain OCR; no false claims |
+| ML, trained here | TF-IDF + Logistic Regression | Fault category from the note | 95% accuracy on 120 test notes |
+| ML, trained here | Random Forest classifier + regressor | BER risk and repair hours, with reasons | ROC AUC 0.82; hours error 0.43 h against 1.24 h for guessing the average |
 
-## Workflow on the bench
+## The code: three files
 
-1. **Photograph the board** (camera, gallery or one of 50 demo boards). OCR finds the yellow asset
-   tag, crops and cleans it, and reads it. The serial number is looked up in the board registry.
-2. **Components:** the detector draws a box around every part and counts them by type.
-3. **Voice note:** *"Green deposits on the pins, salt residue across the lower edge, moisture ingress."*
-4. **Fault diagnosis (ML 1):** probability for each of 6 fault categories, plus the words that drove it.
-5. **Repair recommendation (ML 2):** board type, age, previous repairs and the predicted fault give
-   BER risk and estimated hours.
-6. **Save** the job card. The log is exported as CSV (to the tablet's storage or a USB drive).
-
-## Results
-
-All scores are on held-out data.
-
-**Fault classifier** (120 held-out notes, 5-fold cross-validation for model selection)
-
-| Model | CV F1 | Test accuracy |
-|---|---|---|
-| Naive Bayes | 0.969 | 0.950 |
-| **Logistic Regression** (chosen: probabilities + explanations) | 0.977 | 0.950 |
-| Linear SVM | 0.977 | 0.942 |
-
-**Repair outcome predictor (Random Forest):** BER ROC AUC 0.82, accuracy 75% (always guessing "Repairable"
-gives 72%). Repair-hours mean absolute error 0.43 h, against 1.24 h for guessing the average. Board age and
-fault type drive scrap decisions.
-
-**Part detector** (YOLOv8s, COCO-pretrained, fine-tuned on 785 tiles of the 137 training boards for 112 epochs
-/ 89 min on a free Kaggle T4 GPU; early stopping kept epoch 87). The web app runs it tiled: the photo is
-enlarged to 2,048 px on the long side, cut into overlapping 1,024 px tiles, plus one whole-photo pass.
-
-Scored on the 22 test boards (4,709 labelled parts, full-resolution photos) with `detector/eval_tiling.py`:
-
-| Model and mode | mAP@50 (5 common types) | Capacitor | Resistor | Recall @0.30 | Precision @0.30 | Parts / board | s / board |
-|---|---|---|---|---|---|---|---|
-| YOLOv8n (whole photos), single pass | 0.405 | 0.29 | 0.31 | 34% | 46% | 96 | 0.12 |
-| YOLOv8n (whole photos), tiled ×1.5 | 0.455 | 0.37 | 0.38 | 46% | 40% | 181 | 0.52 |
-| **YOLOv8s (tiles), tiled ×2 (current)** | **0.522** | **0.44** | **0.50** | **49%** | **51%** | 202 | 1.45 |
-
-The tile-trained model is meant to be run tiled; fed a whole photo in one pass it scores 0.358, because it
-has never seen parts that small. Per-tile scores from the YOLO validator on the test tiles: mAP@50 0.473,
-IC 0.62, Switch 0.68, Connector 0.53, Resistor 0.52, Capacitor 0.45, Transistor/Diode 0.39, Inductor 0.12.
-Training notebook: `detector/kaggle_train_tiles.ipynb`. The previous nano model (0.349 on the YOLO
-validator, trained 4.8 h on a CPU runner) is in the git history.
-
-**OCR on the 50 demo photos:**
-
-| Pipeline | Serials read correctly |
+| File | What is in it |
 |---|---|
-| Web app: Tesseract on the whole photo | 15 / 50 (30%) |
-| Web app: find tag → crop → contrast + Otsu → Tesseract | **49 / 50 (98%)** |
-| Android: ML Kit on the device (emulator test) | **47 / 50 (94%)** |
+| [app.py](app.py) | The web app: the three screens (Repair Bench, Model Evaluation, Repair Log). |
+| [pcb_ai.py](pcb_ai.py) | Everything the app does with a photo and a job: tag OCR, part detector with tiling, chip OCR, BOM, and the explanation of each Random Forest prediction. |
+| [train.py](train.py) | How the models were made and scored: synthetic repair records, ML training and evaluation, training tiles for the detector, and the detector and chip-OCR evaluations. |
 
-The Tesseract miss is a yellow tag on a yellow motherboard.
+Also in the repo:
 
-**Speech-to-text** (4 synthesised voice notes, 23 key words; tests in CI):
+| | |
+|---|---|
+| [test_project.py](test_project.py) | 28 automated checks covering every part above, including a full run of the app. |
+| [train_detector_kaggle.ipynb](train_detector_kaggle.ipynb) | The notebook that trained the detector on a free Kaggle GPU (89 minutes). |
+| `data/` | Synthetic repair records, the board registry, the chip catalogue, and the hand-labelled chip crops. |
+| `models/` | The trained models and their recorded scores. |
+| `sample_images/` | 50 real board photos for the demo (Roboflow 100, CC BY 4.0), each with a synthetic asset tag. |
 
-| Engine | Key words recognised | Faults diagnosed correctly from the transcript |
-|---|---|---|
-| Whisper base.en (web app) | 18 / 23 | 4 / 4 |
-| Vosk small-en, free vocabulary (phone) | 7 / 23 | not reached |
-| Vosk small-en + domain word list (phone, shipped) | **21 / 23** | **4 / 4** |
+## Run it
 
-The phone constrains Vosk to a 279-word repair vocabulary: every word the fault classifier knows plus
-an electronics lexicon. Accuracy on the robotic test voice went from 30% to 91%. The word list is built from
-the training notes, never from the test sentences.
-
-## Data
-
-* **Repair records:** 600 synthetic job records (`generate_data.py`, fixed seed). Notes are built from
-  phrase banks for each fault type, and 25% of them mix in a symptom from another fault. No real facility data is used.
-* **PCB photos:** [Roboflow 100 "printed circuit board" v4](https://universe.roboflow.com/roboflow-100/printed-circuit-board/dataset/4),
-  CC BY 4.0. The 23 original labels are merged into 7 part types, and non-parts (pads, test points,
-  unknown) are dropped. Roboflow's split already keeps each board in a single split, which avoids leakage.
-  137 boards are used for training, 40 for validation and 22 for testing.
-* **Demo boards:** 50 of the 62 validation and test boards (the detector never trained on them), each with a
-  synthetic yellow asset tag and a synthetic history in `data/board_registry.csv`.
-* We also examined [pcb-components detection v1](https://universe.roboflow.com/fedoration/pcb-components-detection/dataset/1)
-  (CC BY 4.0). Its 68 labels are bare numbers ("1" to "67", "object") with no published meaning, so they
-  can't be mapped to part types, and it is not used for training.
-
-See [ATTRIBUTION.md](ATTRIBUTION.md) for credits and licences.
-
-## Testing
-
-Every push runs on GitHub Actions:
-
-* **Python** (`tests/`, pytest):
-  * data integrity and reproducibility;
-  * model quality thresholds and sensible behaviour (e.g. BER risk rises with age);
-  * retraining reproduces the metrics;
-  * OCR accuracy on all 50 demo photos;
-  * the exported Android models match scikit-learn;
-  * detector decoding and quality;
-  * a headless Streamlit run of the full bench flow.
-* **Android JVM unit tests:**
-  * on-device fault classifier and Random Forests match scikit-learn on 600 cases to 1e-6;
-  * YOLO decoding matches the Python decoder on 349 detections;
-  * OCR label parsing, including common OCR errors.
-* **Android emulator end-to-end test:**
-  * the app has no INTERNET permission;
-  * ML Kit reads at least 90% of the 50 demo tags (94% measured);
-  * the 600 parity cases pass again on Android's own runtime;
-  * offline speech-to-text: synthesised WAV notes → Vosk → fault classifier;
-  * the detector finds parts;
-  * a full job card is created through the UI and appears in the log.
-* **Build check:** the release APK is inspected to confirm it has no network permission.
-
-### Bugs the automated tests caught
-
-* Android's regex engine rejects a Java flag used in the TF-IDF tokenizer, which would have crashed the app on
-  any real device. Caught by the emulator test.
-* A PyAV release removed an argument faster-whisper relies on, which broke web voice notes. Audio is now decoded with ffmpeg.
-* A process-wide thread limit set for Tesseract made Whisper produce garbage transcripts. It's now scoped
-  to Tesseract calls, with a regression test.
-* Running Tesseract with several threads per image while reading photos in parallel caused CI timeouts.
-
-## Install the Android app (air-gapped tablet)
-
-1. Download `PCB-Repair-Assistant.apk` from the repo's **Releases** page (on any internet-connected PC).
-2. Copy it to the tablet by USB cable or a USB drive.
-3. On the tablet, open it from the Files app and allow "install unknown apps" for Files.
-4. The app needs no network. Grant microphone permission the first time you record a voice note.
-
-Requires Android 8.0 or later. The APK is about 127 MB because every model is bundled (Vosk speech ~40 MB, detector 13 MB, ML Kit OCR).
-
-## Run the web app
+Needs Python 3.12 and [Tesseract OCR](https://github.com/tesseract-ocr/tesseract) installed.
 
 ```bash
-sudo apt install tesseract-ocr        # Windows: UB Mannheim installer
 pip install -r requirements.txt
-streamlit run app.py
+streamlit run app.py          # the web app
+pytest test_project.py        # check everything works (about 2 minutes)
 ```
 
-To deploy on Streamlit Community Cloud, connect this repo, set main file `app.py` and Python 3.12.
-`packages.txt` installs Tesseract.
-
-## Rebuild everything
+Recreate the models and scores:
 
 ```bash
-python generate_data.py                     # synthetic repair records
-python train_models.py                      # ML models + metrics (about 5 s)
-python export_android.py                    # JSON weights + parity tests for the phone
-python detector/prepare_dataset.py <rf100>  # detector dataset from the Roboflow zip
-python make_demo_images.py <rf100>          # 50 demo boards + registry
-python make_detector_fixture.py             # shared YOLO decoding test fixture
-# detector training runs on GitHub Actions: "Train part detector" workflow (about 4 h on CPU)
-pytest -v
+python train.py data                    # synthetic repair records (fixed seed, always the same file)
+python train.py ml                      # train and score the two ML models (a few seconds)
+python train.py eval-chips              # score chip OCR on the 91 hand-labelled chips
+python train.py tiles RF100 OUT         # cut training tiles for the detector (needs the Roboflow dataset)
+python train.py eval-detector RF100     # score the detector on the 22 unseen test boards
 ```
 
-## Project structure
+`RF100` is the unzipped [Roboflow 100 printed circuit board dataset](https://universe.roboflow.com/roboflow-100/printed-circuit-board/dataset/4). The last two commands also need `pip install pyyaml`.
 
-```
-app.py, ocr_utils.py, speech_utils.py, detector_utils.py   Streamlit web app
-generate_data.py, train_models.py, export_android.py      ML data, training, export to Android
-detector/                                                 detector dataset prep + training
-make_demo_images.py, sample_images/                       50 demo boards
-android/                                                  offline Android app (Kotlin + Jetpack Compose)
-  app/src/main/java/.../core/                             on-device ML engine (plain Java, unit-tested)
-tests/                                                    pytest suite
-.github/workflows/                                        CI: tests, APK build, emulator test, detector training
-```
+The web demo is hosted on Streamlit Community Cloud, which redeploys on every push to `main` (main file `app.py`, Python 3.12; Tesseract comes from `packages.txt`).
 
 ## Limitations
 
-* Repair records and board histories are synthetic. With real job records, the same pipeline retrains unchanged.
-* The detector struggles with the tiniest SMD parts on very dense boards (tiling the photo, a larger model or a GPU
-  would help), and inductors have very few examples. It also sometimes boxes the yellow asset tag as a "connector".
-* Voice notes are English only. Vosk and Whisper both support Urdu, which is a natural next step.
+- The repair records and board histories are synthetic, so the ML models learn patterns that were designed in. The same code retrains unchanged on real job records.
+- The detector finds about half of the labelled parts; the misses are mostly the smallest resistors and capacitors on dense boards. BOM quantities are a starting point to check.
+- Chip reading works on larger chips that are in the catalogue.
+- Rare part types (inductors, switches) have too few examples to score reliably.
+
+## Earlier work kept on the `full-version` branch
+
+An offline Android version of the app, voice input (speech-to-text), the first detector's training scripts and the scripts that made the demo photos and report figures are not part of this simplified version. They are preserved on the `full-version` branch.
+
+Data and licence credits are in [ATTRIBUTION.md](ATTRIBUTION.md).

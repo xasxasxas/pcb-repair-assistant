@@ -8,7 +8,7 @@ When a faulty circuit board lands on a repair bench, the technician has a probe 
 
 My project is a bench assistant that takes most of that typing away. The technician photographs the board and writes one line about what they see. The assistant reads the asset tag, finds the components on the board, reads the part numbers on the larger chips, classifies the fault, and recommends whether the board is worth repairing and how long it should take. The result is saved as a job card.
 
-It runs as a Streamlit web app for the class demo. An offline Android version that uses the same models already exists for air-gapped workshops, and I'll return to it after the course.
+It runs as a Streamlit web app for the class demo. An earlier offline Android version exists for air-gapped workshops (kept on the `full-version` branch), and I'll return to it after the course.
 
 ## How a job flows through the app
 
@@ -16,11 +16,11 @@ It runs as a Streamlit web app for the class demo. An offline Android version th
 2. The serial number pulls the board's age and repair history from a registry. This step is a plain lookup.
 3. An object detector draws a box around every component it recognises and counts them by type.
 4. For the six largest chips, OCR reads the printed part number and looks it up in a local parts list, so the app can say "Intel 82437FX, 430FX PCIset system controller" instead of just "IC".
-5. The detector counts and the chip names are combined into a bill of materials (BOM) for the board, which downloads as a CSV.
+5. The detector counts and the chip names are combined into a bill of materials (BOM) for the board.
 6. The technician types a short note, for example "Green deposits on the pins, salt residue across the lower edge, moisture ingress."
 7. A text classifier turns the note into one of six fault categories and shows which words drove the decision.
 8. A Random Forest combines board type, age, repair history and the predicted fault into a beyond-economic-repair (BER) risk and an estimated repair time, and shows how much each of those inputs pushed the answer up or down.
-9. The job card is saved to a log that exports as CSV.
+9. The job card is saved to the repair log.
 
 ## Which parts are AI and which are ML
 
@@ -44,7 +44,7 @@ The Random Forest's feature importances show board age and fault type driving th
 
 I moved the project to a new GitHub repository, rebuilt the environment from scratch and re-ran the full test suite before changing anything. The automated tests cover data integrity, model quality thresholds, OCR accuracy on all 50 demo photos and a headless run of the whole web app. Having a known-good baseline first meant every later change could be checked against it.
 
-I also switched off voice input in the web app. It used Whisper speech-to-text, and a browser-hosted demo in a classroom can't rely on a microphone. The code is still there behind a setting, and the Android app keeps its own offline speech recogniser. In the web demo the technician types the note instead.
+I also switched off voice input in the web app. It used Whisper speech-to-text, and a browser-hosted demo in a classroom can't rely on a microphone. The voice code is kept with the Android version on the `full-version` branch. In the web demo the technician types the note instead.
 
 ### Finding the small components
 
@@ -95,7 +95,7 @@ I considered SHAP, the usual library for this. For a tree model, this path-based
 
 ### A parts list from the photo
 
-The app now turns what it found into a bill of materials: one line per chip it could name (part number, manufacturer, function) and one line per part type with its count. It downloads as a CSV. The detector finds about half of the smallest parts on dense boards, so the app labels the quantities as a starting point to check rather than a complete BOM.
+The app now turns what it found into a bill of materials: one line per chip it could name (part number, manufacturer, function) and one line per part type with its count. The detector finds about half of the smallest parts on dense boards, so the app labels the quantities as a starting point to check rather than a complete BOM.
 
 While building it I noticed the default demo board had lost its Realtek chip name. The retrained detector draws slightly different boxes, and that chip had dropped to the fifth largest, while the app only read four. Reading the six largest names 24 of the hand-labelled chips across the demo boards instead of 21, for about three seconds more per board.
 
@@ -150,4 +150,4 @@ The board photos come from the Roboflow 100 "printed circuit board" dataset (CC 
 
 I'd open with board_8601: the tag is read, 282 components are boxed, and both Intel chipset chips are named, and the parts list underneath shows them by part number. Next I'd toggle tiled detection off and on, so the class can watch the small parts disappear (194 left) and come back. That board is 17 years old, and the Random Forest marks it BER whatever the note says. The "why" chart shows the reason: age alone adds 16 points. For the contrast I'd switch to board_1686, a two-year-old Zybo. With a short-circuit note it's Repairable at about 31% BER risk; with the salt-corrosion note it flips to BER at 71%, and the chart shows corrosion adding 24 points while the board's young age still takes 9 off. Then I'd open the Model Evaluation tab to show where each number in this briefing comes from.
 
-The live demo is at https://pcb-repair-assistant-b7yfndd6wrb2vbxtzvpszz.streamlit.app/. The source code, tests and full work log are in the project repository (PROGRESS.md).
+The live demo is at https://pcb-repair-assistant-b7yfndd6wrb2vbxtzvpszz.streamlit.app/. The source code is three files (app.py for the screens, pcb_ai.py for the AI and ML logic, train.py for training and scoring), with one test file and the full work log (PROGRESS.md) in the project repository.
