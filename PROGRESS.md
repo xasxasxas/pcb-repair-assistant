@@ -5,7 +5,7 @@ MS course project. **Final submission: Monday 30 Nov 2026.** The class demo uses
 - **Status:** Track A done. Tiled detection, the YOLOv8s retrain on tiles and IC marking OCR are all done, measured and live. Remaining: buffer, optional Track B, slides and rehearsal.
 - **Repo:** `xasxasxas/pcb-repair-assistant` (private). The work log is [at the bottom](#work-log).
 - **Live demo:** https://pcb-repair-assistant-b7yfndd6wrb2vbxtzvpszz.streamlit.app/
-- **Class briefing:** [docs/BRIEFING.md](docs/BRIEFING.md) · **Deploy steps:** [docs/DEPLOY.md](docs/DEPLOY.md)
+- **Class briefing:** [docs/BRIEFING.md](docs/BRIEFING.md) · **Track A/B explained with pictures:** [docs/TRACKS_EXPLAINED.md](docs/TRACKS_EXPLAINED.md) · **Deploy steps:** [docs/DEPLOY.md](docs/DEPLOY.md)
 
 ---
 
@@ -179,3 +179,5 @@ Result (`tools/eval_ic_ocr.py` → `models/ic_ocr_eval.json`):
 - New `tools/make_detection_figure.py` regenerates `docs/tiling_before_after.jpg` (old single pass 97 parts vs new tiled 203 on board_1686).
 - Demo check with the new model: board_8601 has 282 parts tiled / 194 single, and 82437FX and 82371FB are named; board_9387 has 5CEBA4F23 named; board_1686 has no chip named (same as before).
 - Docs updated: README detector section, BRIEFING (retraining section with results, plan, demo numbers), DEPLOY (memory, timing), Android model labels.
+- Track A/B explainer with figures: `docs/TRACKS_EXPLAINED.md`. The figures in `docs/figures/` (tile grid, what the network sees per mode, results chart, chip OCR stages, Track A vs B, golden-board diagram) are made from project data by `tools/make_explainer_figures.py`. The Track B diagram is marked as an illustration: the part was erased digitally and the heat map drawn by hand.
+- Track B (PatchCore on VisA pcb1–pcb4) is waiting for the go-ahead on downloading the dataset (VisA_20220922.tar, 1.93 GB, from the official Amazon bucket, CC BY 4.0) and the ResNet-18 weights (about 45 MB).
