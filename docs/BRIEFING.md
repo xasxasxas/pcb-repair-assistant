@@ -15,11 +15,12 @@ It runs as a Streamlit web app for the class demo. An offline Android version th
 1. Photograph the board. OCR finds the yellow asset tag, crops it, cleans it up and reads the board type, revision and serial number.
 2. The serial number pulls the board's age and repair history from a registry. This step is a plain lookup.
 3. An object detector draws a box around every component it recognises and counts them by type.
-4. For the four largest chips, OCR reads the printed part number and looks it up in a local parts list, so the app can say "Intel 82437FX, 430FX PCIset system controller" instead of just "IC".
-5. The technician types a short note, for example "Green deposits on the pins, salt residue across the lower edge, moisture ingress."
-6. A text classifier turns the note into one of six fault categories and shows which words drove the decision.
-7. A Random Forest combines board type, age, repair history and the predicted fault into a beyond-economic-repair (BER) risk and an estimated repair time.
-8. The job card is saved to a log that exports as CSV.
+4. For the six largest chips, OCR reads the printed part number and looks it up in a local parts list, so the app can say "Intel 82437FX, 430FX PCIset system controller" instead of just "IC".
+5. The detector counts and the chip names are combined into a bill of materials (BOM) for the board, which downloads as a CSV.
+6. The technician types a short note, for example "Green deposits on the pins, salt residue across the lower edge, moisture ingress."
+7. A text classifier turns the note into one of six fault categories and shows which words drove the decision.
+8. A Random Forest combines board type, age, repair history and the predicted fault into a beyond-economic-repair (BER) risk and an estimated repair time, and shows how much each of those inputs pushed the answer up or down.
+9. The job card is saved to a log that exports as CSV.
 
 ## Which parts are AI and which are ML
 
@@ -82,6 +83,22 @@ Retraining did what I hoped. Resistors went from 0.31 to 0.50 and capacitors fro
 
 There are two trade-offs. The bigger model is slower, about 1.5 seconds per board on my laptop, which is still fine for a bench tool. And because it has only ever seen enlarged parts, it does worse than the old model if you feed it the whole photo in one pass (0.36). That's why tiled detection is on by default. A side effect I didn't expect: it no longer boxes the yellow asset tag as a connector.
 
+### Explaining every repair decision
+
+The brief for this project was a simple, explainable app, and until this week only half of it explained itself. The fault classifier showed which words drove its answer, but the Random Forest just printed "BER, 59%".
+
+Now every recommendation comes with its reasons. A Random Forest is a few hundred decision trees, and each tree sends the job down a path of yes/no questions ("older than 12 years?", "is the fault corrosion?"). Every question moves that tree's estimate up or down, and I credit the change to the input the question was about. Averaged over all the trees, this splits the prediction exactly into a starting point plus one share per input. There's no approximation: the parts always add up to the number on screen, and a test checks this.
+
+On a six-year-old display driver with the salt-corrosion note, it reads like this: the model starts at 50%, corrosion adds 22 points, the board's fairly young age takes 8 off, and the result is 59%, so BER. Repair time starts at the average job, 3.6 hours, and corrosion adds 2.3 of the 5.6 hours. A technician can disagree with a reason in a way they can't disagree with a bare number. The reasons are also saved with the job card.
+
+I considered SHAP, the usual library for this. For a tree model, this path-based split gives the same kind of answer with no extra dependency, and it ports directly to the Android app, which already has the trees as JSON.
+
+### A parts list from the photo
+
+The app now turns what it found into a bill of materials: one line per chip it could name (part number, manufacturer, function) and one line per part type with its count. It downloads as a CSV. The detector finds about half of the smallest parts on dense boards, so the app labels the quantities as a starting point to check rather than a complete BOM.
+
+While building it I noticed the default demo board had lost its Realtek chip name. The retrained detector draws slightly different boxes, and that chip had dropped to the fifth largest, while the app only read four. Reading the six largest names 24 of the hand-labelled chips across the demo boards instead of 21, for about three seconds more per board.
+
 ### Reading the part numbers on chips
 
 This was the original stretch idea from my proposal, and it turned out to be the most interesting problem of the week. Chip markings are tiny, laser-etched, grey on black, often reflective, and the chip can be mounted at any of four rotations. Plain Tesseract on a chip crop reads almost nothing.
@@ -125,11 +142,12 @@ The board photos come from the Roboflow 100 "printed circuit board" dataset (CC 
 |---|---|
 | Mon 23 Nov | Baseline, tiled detection and chip-marking OCR, and the web app deployed on Streamlit Community Cloud. Done. |
 | Tue 24 Nov | Retrained YOLOv8s detector installed and re-scored on the 22 test boards. Done. |
-| Wed 25 to Thu 26 Nov | Buffer for fixes; visual fault detection (a "golden board" anomaly model) only if time allows |
+| Tue 24 Nov | Explanations for every repair decision, and a parts list (BOM) from the photo. Done. |
+| Wed 25 to Thu 26 Nov | Buffer for fixes. I dropped the planned "golden board" anomaly model: it needs many photos of every board design, and a repair shop sees thousands of designs with new ones arriving all the time. |
 | Fri 27 to Sun 29 Nov | Slides, demo rehearsal, final numbers in the report |
 
 ## What I'd say in the demo
 
-I'd open with board_8601: the tag is read, 282 components are boxed, and both Intel chipset chips are named. Next I'd toggle tiled detection off and on, so the class can watch the small parts disappear (194 left) and come back. That board is 17 years old, and the Random Forest marks it BER whatever the note says, which shows how heavily age weighs. For the contrast I'd switch to board_1686, a two-year-old Zybo. With a short-circuit note it's Repairable at about 31% BER risk; with the salt-corrosion note it flips to BER at 71%. Then I'd open the Model Evaluation tab to show where each number in this briefing comes from.
+I'd open with board_8601: the tag is read, 282 components are boxed, and both Intel chipset chips are named, and the parts list underneath shows them by part number. Next I'd toggle tiled detection off and on, so the class can watch the small parts disappear (194 left) and come back. That board is 17 years old, and the Random Forest marks it BER whatever the note says. The "why" chart shows the reason: age alone adds 16 points. For the contrast I'd switch to board_1686, a two-year-old Zybo. With a short-circuit note it's Repairable at about 31% BER risk; with the salt-corrosion note it flips to BER at 71%, and the chart shows corrosion adding 24 points while the board's young age still takes 9 off. Then I'd open the Model Evaluation tab to show where each number in this briefing comes from.
 
 The live demo is at https://pcb-repair-assistant-b7yfndd6wrb2vbxtzvpszz.streamlit.app/. The source code, tests and full work log are in the project repository (PROGRESS.md).

@@ -24,7 +24,9 @@ import pandas as pd
 import streamlit as st
 from PIL import Image
 
+from bom import build_bom
 from detector_utils import PartDetector
+from explain_utils import contributions
 from ocr_utils import find_label, parse_label, preprocess, read_text
 
 VOICE_ENABLED = os.environ.get("PCB_VOICE", "0") == "1"
@@ -32,6 +34,7 @@ VOICE_ENABLED = os.environ.get("PCB_VOICE", "0") == "1"
 ROOT = Path(__file__).parent
 MODELS = ROOT / "models"
 SAMPLES = ROOT / "sample_images"
+MAX_ICS = 6          # chips read per board: 6 finds 24 of the labelled chips vs 21 for 4, about 3 s more
 try:
     DETECTOR_NAME = json.loads((MODELS / "parts.json").read_text()).get("model", "YOLOv8")
 except (OSError, ValueError):
@@ -134,7 +137,7 @@ def load_ic_catalogue():
 @st.cache_data(max_entries=32, show_spinner=False)
 def read_chip_markings(key, _img, _parts):
     from ic_ocr import read_ics
-    return read_ics(_img, _parts, max_ics=4, catalogue=load_ic_catalogue())
+    return read_ics(_img, _parts, max_ics=MAX_ICS, catalogue=load_ic_catalogue())
 
 
 @st.cache_data
@@ -169,6 +172,42 @@ def explain_note(note, predicted):
     vocab = tfidf.get_feature_names_out()
     top = np.argsort(contrib)[::-1][:6]
     return [(vocab[i], float(contrib[i])) for i in top if contrib[i] > 0]
+
+
+RED, GREEN = "#d64541", "#2e9e5b"
+
+
+def why_chart(parts, labels, scale, unit, title):
+    """Bar per input: how far it pushed this prediction up (red) or down (green)."""
+    df = pd.DataFrame({"Input": [labels[k] for k in parts],
+                       "Effect": [v * scale for v in parts.values()]})
+    df["Direction"] = np.where(df["Effect"] >= 0, "raises", "lowers")
+    digits = 0 if unit == "pts" else 1
+    df["Text"] = [f"{round(v, digits) + 0:+.{digits}f} {unit}" if round(v, digits) else f"0 {unit}"
+                  for v in df["Effect"]]
+    order = list(df.assign(a=df["Effect"].abs()).sort_values("a", ascending=False)["Input"])
+    lim = max(df["Effect"].abs().max() * 1.45, 1e-6)
+    base = alt.Chart(df, title=title).encode(
+        y=alt.Y("Input:N", sort=order, title=None, axis=alt.Axis(labelLimit=260)))
+    bars = base.mark_bar(cornerRadiusEnd=4).encode(
+        x=alt.X("Effect:Q", title=None, scale=alt.Scale(domain=[-lim, lim]), axis=alt.Axis(grid=False)),
+        color=alt.Color("Direction:N", scale=alt.Scale(domain=["raises", "lowers"], range=[RED, GREEN]),
+                        legend=None),
+        tooltip=["Input", "Text"])
+    up = base.transform_filter("datum.Effect >= 0").mark_text(align="left", dx=4).encode(
+        x="Effect:Q", text="Text:N")
+    down = base.transform_filter("datum.Effect < 0").mark_text(align="right", dx=-4).encode(
+        x="Effect:Q", text="Text:N")
+    return (bars + up + down).properties(height=alt.Step(30))
+
+
+def why_sentence(parts, labels, scale, unit):
+    top = sorted(parts.items(), key=lambda kv: -abs(kv[1]))[:2]
+    bits = [f"{labels[k].split(': ')[0].lower()} {'raised' if v > 0 else 'lowered'} it by "
+            f"{abs(v) * scale:.0f}{unit}" if unit == " points" else
+            f"{labels[k].split(': ')[0].lower()} {'added' if v > 0 else 'saved'} {abs(v) * scale:.1f}{unit}"
+            for k, v in top if abs(v * scale) >= (1 if unit == " points" else 0.1)]
+    return ("Biggest effects: " + "; ".join(bits) + ".") if bits else ""
 
 
 # ---------------------------------------------------------------- sidebar
@@ -268,14 +307,14 @@ with bench:
             st.markdown(badge("AI", "OCR reads the part number on each large IC, then looks it up "
                                     "in the parts catalogue"), unsafe_allow_html=True)
             if st.toggle("Read IC markings", value=True, key="read_ics",
-                         help="Crops the 4 largest detected ICs, tries all four rotations and three "
+                         help=f"Crops the {MAX_ICS} largest detected ICs, tries all four rotations and three "
                               "image clean-ups, and matches the text against data/ic_catalogue.csv."):
                 with st.spinner("Reading chip markings (a few seconds per chip)..."):
                     chips = read_chip_markings(image_key(img) + str(tiled), img, parts)
                 st.session_state.chips = chips
                 if not chips:
                     st.caption("No ICs large enough to read (needs about 60 px or more in the photo).")
-                cols = st.columns(4)
+                cols = [c for _ in range(0, len(chips), 3) for c in st.columns(3)]
                 for col, chip in zip(cols, chips):
                     with col:
                         x1, y1, x2, y2 = (round(v) for v in chip["box"])
@@ -296,6 +335,20 @@ with bench:
                             st.caption(f"rotation {chip['rotation']}°")
             else:
                 st.session_state.chips = []
+
+            # ---------- Step 1d: bill of materials from the photo
+            st.markdown("#### Bill of materials (from the photo)")
+            bom = build_bom(parts, st.session_state.chips)
+            st.session_state.bom = bom
+            if len(bom):
+                st.dataframe(bom, hide_index=True, width="stretch")
+                st.caption("Built from what the AI found: part counts from the detector, part numbers from "
+                           "chip OCR. The detector finds about half of the smallest parts on dense boards, "
+                           "so treat the quantities as a starting point to check, not a complete BOM.")
+                st.download_button("⬇️ Download BOM (CSV)", bom.to_csv(index=False),
+                                   f"bom_{ocr['serial'] or image_key(img)[:8]}.csv", "text/csv")
+            else:
+                st.caption("No parts detected, so there is nothing to list.")
 
     # ---------- Step 2: board history lookup
     st.markdown("### 2 · Board history")
@@ -376,8 +429,24 @@ with bench:
         r1.metric("Recommendation", ("⛔ " if ber_p >= 0.5 else "✅ ") + decision.split(" (")[0])
         r2.metric("BER risk", f"{ber_p:.0%}")
         r3.metric("Estimated repair time", f"{hours:.1f} h")
-        st.caption(f"Inputs used: {board['board_type']} · {FAULT_NAMES[fault]} · "
-                   f"{int(board['age_years'])} yrs old · {int(board['previous_repairs'])} previous repairs")
+        labels = {"board_type": f"Board type: {board['board_type']}",
+                  "fault_category": f"Fault: {FAULT_NAMES[fault]}",
+                  "age_years": f"Board age: {int(board['age_years'])} yrs",
+                  "previous_repairs": f"Previous repairs: {int(board['previous_repairs'])}"}
+        b_start, b_parts, _ = contributions(outcome_clf, X)
+        h_start, h_parts, _ = contributions(hours_reg, X)
+        st.markdown("**Why this recommendation**")
+        w1, w2 = st.columns(2)
+        with w1:
+            st.altair_chart(why_chart(b_parts, labels, 100, "pts", "BER risk"), width="stretch")
+            st.caption(f"Starts at {b_start:.0%} (the model's average) → {ber_p:.0%}. "
+                       + why_sentence(b_parts, labels, 100, " points"))
+        with w2:
+            st.altair_chart(why_chart(h_parts, labels, 1, "h", "Repair time"), width="stretch")
+            st.caption(f"Starts at {h_start:.1f} h (the average job) → {hours:.1f} h. "
+                       + why_sentence(h_parts, labels, 1, " h"))
+        reasons = "; ".join(f"{labels[k]} {v * 100:+.0f} pts" for k, v in
+                            sorted(b_parts.items(), key=lambda kv: -abs(kv[1])) if abs(v) >= 0.01)
 
         st.markdown("### 6 · Save job card")
         if st.button("💾 Save to repair log", type="primary"):
@@ -387,10 +456,11 @@ with bench:
                 "note": note, "fault": FAULT_NAMES[fault],
                 "confidence": round(float(proba.max()), 2),
                 "recommendation": decision, "ber_risk": round(ber_p, 2),
-                "est_hours": round(hours, 1),
+                "est_hours": round(hours, 1), "why_ber": reasons,
                 "parts": "; ".join(f"{k} x{v}" for k, v in
                                    pd.Series([p["name"] for p in parts], dtype=str).value_counts().items()),
                 "ics": "; ".join(c["match"]["key"] for c in st.session_state.get("chips", []) if c["match"]),
+                "bom_lines": len(st.session_state.get("bom", [])),
             })
             st.success(f"Saved job card for S/N {serial}. See the Repair Log tab.")
     elif board is None:

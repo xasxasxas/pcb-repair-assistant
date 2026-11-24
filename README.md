@@ -29,7 +29,7 @@ It ships as two apps built on the same models:
 | **AI** (deep learning, pretrained) | **Speech-to-text** | Transcribes the technician's voice note |
 | **AI** (deep learning, **fine-tuned by us**) | **Object detection**: YOLOv8s | Finds and classifies components: IC, capacitor, resistor, connector, transistor/diode, inductor, switch |
 | **ML** (classical, **trained by us**) | **Text classification**: TF-IDF + Logistic Regression | Predicts the fault category from the note and shows which words drove the decision |
-| **ML** (classical, **trained by us**) | **Ensemble learning**: Random Forest classifier + regressor | Predicts Repairable vs BER (beyond economic repair) and estimated repair hours |
+| **ML** (classical, **trained by us**) | **Ensemble learning**: Random Forest classifier + regressor | Predicts Repairable vs BER (beyond economic repair) and estimated repair hours, and explains each prediction as per-input contributions (tree-path decomposition, exact) |
 
 ## Workflow on the bench
 

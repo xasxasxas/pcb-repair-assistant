@@ -49,7 +49,7 @@ How to read the chart:
 
 ### Step 3: read the part number on the chips
 
-For the four largest chips on a board, the app reads the printed marking and looks it up in a small parts list:
+For the six largest chips on a board, the app reads the printed marking and looks it up in a small parts list:
 
 ![Detector finds the chip, crop, clean up, read at 4 rotations, match the catalogue](figures/a4_chip_ocr_steps.png)
 

@@ -38,3 +38,16 @@ def test_full_bench_flow_and_save():
     entry = at.session_state.log[0]
     assert entry["fault"] == "Corrosion"
     assert entry["recommendation"] in {"Repairable", "BER (beyond economic repair)"}
+    assert entry["why_ber"], "the saved job card explains the BER risk"
+    assert entry["bom_lines"] >= 1
+
+
+def test_bench_shows_bom_and_explanation():
+    at = run_app()
+    bom = at.session_state.bom
+    assert len(bom) >= 1 and bom["Qty"].sum() > 0
+    note_pick = next(s for s in at.selectbox if s.label == "Example note")
+    note_pick.set_value(CORROSION).run()
+    assert not at.exception
+    assert any("Why this recommendation" in m.value for m in at.markdown)
+    assert any("Starts at" in c.value for c in at.caption)
